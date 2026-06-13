@@ -128,8 +128,9 @@ button, input, textarea, select {
 /* Glassmorphism Utility Classes */
 .glass-panel {
   background: var(--color-surface);
-  backdrop-filter: var(--glass-blur);
+  
   -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   border: var(--glass-border);
   border-radius: 16px;
   box-shadow: var(--glass-shadow);
@@ -137,8 +138,8 @@ button, input, textarea, select {
 
 .glass-card {
   background: var(--color-surface);
-  backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   border: var(--glass-border);
   border-radius: 16px;
   padding: 24px;
@@ -215,8 +216,8 @@ button, input, textarea, select {
   height: 80px;
   z-index: 100;
   background: hsla(250, 24%, 6%, 0.4);
-  backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   border-bottom: var(--glass-border);
   display: flex;
   align-items: center;
@@ -238,6 +239,7 @@ button, input, textarea, select {
   letter-spacing: -0.03em;
   background: linear-gradient(135deg, var(--color-text), var(--color-primary));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -381,6 +383,7 @@ button, input, textarea, select {
 /* Modals & Dialogs */
 dialog::backdrop {
   background: rgba(5, 4, 9, 0.85);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 

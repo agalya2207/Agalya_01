@@ -1,5 +1,5 @@
-import React from 'react';
 
+import PropTypes from 'prop-types';
 const Card = ({ title, description, image, tags, onClick }) => {
   return (
     <div className="glass-card" onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
@@ -36,5 +36,11 @@ const Card = ({ title, description, image, tags, onClick }) => {
     </div>
   );
 };
-
+Card.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+  image: PropTypes.string,
+  tags: PropTypes.arrayOf(PropTypes.string),
+  onClick: PropTypes.func,
+};
 export default Card;
