@@ -11,7 +11,7 @@ const Navbar = () => {
     <header className="navbar-header">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          PORTFOLIO.
+          AG.
         </Link>
 
         {/* Hamburger button - mobile only */}
