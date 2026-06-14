@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Mail, Home as HomeIcon, User, Code, Instagram } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const roleTitles = [
@@ -12,7 +12,7 @@ const roleTitles = [
 const stats = [
   { value: "2+", label: "Years of Learning" },
   { value: "5+", label: "Tech Stack" },
-  { value: "3+", label: "Projects Completed" },
+  { value: "3+", label: "Projects" },
   { value: "100+", label: "Hours of Coding" },
 ];
 
@@ -132,7 +132,7 @@ const Home = () => {
         .hero-socials {
           display: flex;
           gap: 16px;
-          margin-top: 8px;
+          margin-top: 4px;
         }
         .hero-social-link {
           display: flex;
@@ -151,6 +151,50 @@ const Home = () => {
           border-color: var(--color-primary);
           transform: translateY(-3px);
           box-shadow: 0 6px 20px var(--color-primary-glow);
+        }
+
+        /* ── Inline Stats ── */
+        .hero-left-stats {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+          margin-top: 24px;
+          width: 100%;
+          max-width: 620px;
+        }
+        .left-stat-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          gap: 6px;
+          padding: 16px 24px;
+          border: 1px solid rgba(139, 92, 246, 0.3);
+          background: rgba(139, 92, 246, 0.05);
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(8px);
+        }
+        .left-stat-item:hover {
+          border-color: rgba(139, 92, 246, 0.6);
+          transform: scale(1.05);
+          background: rgba(139, 92, 246, 0.08);
+        }
+        .left-stat-value {
+          font-size: 1.65rem;
+          font-weight: 800;
+          background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          line-height: 1.1;
+        }
+        .left-stat-label {
+          font-size: 0.75rem;
+          color: var(--color-text-muted);
+          font-weight: 500;
+          line-height: 1.3;
         }
 
         /* ── Right Column (placeholder) ── */
@@ -185,49 +229,6 @@ const Home = () => {
           z-index: 1;
         }
 
-        /* ── Stats Row ── */
-        .hero-stats {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
-          max-width: 1100px;
-          width: 100%;
-          margin: 0 auto;
-          padding: 0 20px 60px;
-        }
-        .stat-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 6px;
-          padding: 28px 16px;
-          border-radius: 16px;
-          background: var(--color-surface);
-          border: 1px solid var(--color-border);
-          backdrop-filter: var(--glass-blur);
-          transition: var(--transition-smooth);
-        }
-        .stat-item:hover {
-          border-color: rgba(139, 92, 246, 0.25);
-          transform: translateY(-4px);
-          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
-        }
-        .stat-value {
-          font-size: 2rem;
-          font-weight: 800;
-          background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          line-height: 1;
-        }
-        .stat-label {
-          font-size: 0.85rem;
-          color: var(--color-text-muted);
-          font-weight: 500;
-          text-align: center;
-        }
-
         /* ── Responsive ── */
         @media (max-width: 900px) {
           .hero-grid {
@@ -244,29 +245,108 @@ const Home = () => {
           .hero-desc { text-align: center; }
           .hero-buttons { justify-content: center; }
           .hero-socials { justify-content: center; }
+          .hero-left-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 480px;
+          }
+          .left-stat-item {
+            align-items: center;
+            padding: 16px 20px;
+          }
           .hero-right {
             min-height: 280px;
             order: -1;
           }
-          .hero-stats {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+        }
+        @media (max-width: 500px) {
+          .hero-name { font-size: 2.5rem; }
+        }
+
+        /* ── Sidebar Social Bar ── */
+        .social-sidebar {
+          position: fixed;
+          left: 24px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          padding: 20px 10px;
+          z-index: 90;
+          background: rgba(24, 20, 36, 0.45);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 30px;
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+          animation: sidebarFadeIn 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        @keyframes sidebarFadeIn {
+          from { opacity: 0; transform: translate(-20px, -50%); }
+          to { opacity: 1; transform: translate(0, -50%); }
+        }
+        .social-sidebar-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          color: var(--color-text-muted);
+          transition: var(--transition-spring);
+          background: transparent;
+        }
+        .social-sidebar-item:hover {
+          color: var(--color-primary);
+          background: rgba(139, 92, 246, 0.12);
+          transform: scale(1.15);
+          box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+        @media (max-width: 900px) {
+          .social-sidebar {
+            display: none;
           }
         }
-        @media (max-width: 480px) {
-          .hero-name { font-size: 2.5rem; }
-          .hero-stats { grid-template-columns: repeat(2, 1fr); }
-          .stat-item { padding: 20px 12px; }
-          .stat-value { font-size: 1.6rem; }
-        }
       `}</style>
+
+      {/* Fixed Social Sidebar - Desktop Only */}
+      <div className="social-sidebar">
+        <Link to="/" className="social-sidebar-item" aria-label="Home">
+          <HomeIcon size={20} />
+        </Link>
+        <Link to="/about" className="social-sidebar-item" aria-label="About">
+          <User size={20} />
+        </Link>
+        <Link to="/about#skills" className="social-sidebar-item" aria-label="Skills">
+          <Code size={20} />
+        </Link>
+        <Link to="/projects" className="social-sidebar-item" aria-label="Projects">
+          <Code size={20} />
+        </Link>
+        <Link to="/about#experience" className="social-sidebar-item" aria-label="Experience">
+          <User size={20} />
+        </Link>
+        <Link to="/contact" className="social-sidebar-item" aria-label="Contact">
+          <Mail size={20} />
+        </Link>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-sidebar-item" aria-label="LinkedIn">
+          <Linkedin size={20} />
+        </a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-sidebar-item" aria-label="GitHub">
+          <Github size={20} />
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-sidebar-item" aria-label="Instagram">
+          <Instagram size={20} />
+        </a>
+      </div>
 
       {/* ── Hero Section ── */}
       <div className="hero-wrapper">
         <div className="hero-grid">
           {/* Left Column */}
           <div className="hero-left">
-            <div className="hero-badge">👋 Hi, I'm</div>
+            <div className="hero-badge">👋 Hi, I&apos;m</div>
 
             <h1 className="hero-name">AGALYA G</h1>
 
@@ -302,6 +382,16 @@ const Home = () => {
                 <Mail size={20} />
               </a>
             </div>
+
+            {/* Stats inline */}
+            <div className="hero-left-stats">
+              {stats.map((stat, i) => (
+                <div className="left-stat-item" key={i}>
+                  <span className="left-stat-value">{stat.value}</span>
+                  <span className="left-stat-label">{stat.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Right Column */}
@@ -309,16 +399,6 @@ const Home = () => {
             <span className="hero-right-placeholder">Photo coming soon</span>
           </div>
         </div>
-      </div>
-
-      {/* ── Stats Row ── */}
-      <div className="hero-stats">
-        {stats.map((stat, i) => (
-          <div className="stat-item glass-panel" key={i}>
-            <span className="stat-value">{stat.value}</span>
-            <span className="stat-label">{stat.label}</span>
-          </div>
-        ))}
       </div>
     </div>
   );

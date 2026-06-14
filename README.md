@@ -12,7 +12,7 @@ A premium, state-of-the-art developer portfolio website featuring a secure, auth
 
 ## Directory Structure
 
-```
+```text
 portfolio/
 ├── public/
 ├── src/
@@ -42,25 +42,33 @@ portfolio/
 ## Setup & Installation
 
 ### 1. Prerequisites
+
 - **Node.js:** Ensure Node.js (v20+ recommended) is installed on your machine.
 
 ### 2. Configure Environment variables
+
 Copy the `.env.example` file to `.env` and fill in your Supabase details:
+
 ```bash
 cp .env.example .env
 ```
+
 Provide your own project credentials:
+
 ```env
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
 ### 3. Initialize the Database & Storage Buckets
+
 Log in to your [Supabase Dashboard](https://supabase.com) and go to the **SQL Editor**:
+
 1. Copy the SQL script inside [supabase/migrations/20260612000000_init_schema.sql](file:///c:/Agalya_01/supabase/migrations/20260612000000_init_schema.sql) and paste it into the editor.
 2. Run the script to initialize tables (`profiles`, `projects`, `messages`), set up RLS policies, trigger-based profile initialization, and storage buckets.
 
 ### 4. Install Dependencies & Launch
+
 ```bash
 npm install
 npm run dev
