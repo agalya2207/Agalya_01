@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { supabase } from '../services/supabaseClient';
 
 export const AuthContext = createContext();
@@ -55,4 +56,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+AuthProvider.propTypes = {
+  children: PropTypes.node,
 };
