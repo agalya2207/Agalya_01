@@ -11,8 +11,8 @@ const roleTitles = [
 
 const stats = [
   { value: "2+", label: "Years of Learning" },
-  { value: "5+", label: "Technologies" },
-  { value: "10+", label: "Projects Completed" },
+  { value: "5+", label: "Tech Stack" },
+  { value: "3+", label: "Projects Completed" },
   { value: "100+", label: "Hours of Coding" },
 ];
 
