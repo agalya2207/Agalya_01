@@ -3,13 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder')) {
+if (!supabaseUrl || !supabaseAnonKey) {
   console.warn(
     'Supabase environment variables are missing or using placeholder values. Please update your .env file with actual credentials.'
   );
 }
 
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder-project.supabase.co',
-  supabaseAnonKey || 'placeholder-key'
+  supabaseUrl || '',
+  supabaseAnonKey || ''
 );
