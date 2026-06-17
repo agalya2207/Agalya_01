@@ -83,6 +83,12 @@ button, input, textarea, select {
   color: inherit;
 }
 
+/* Hide default cursor only when the custom cursor is active */
+body.custom-cursor-active,
+body.custom-cursor-active * {
+  cursor: none !important;
+}
+
 /* Base Layout Container */
 .app-container {
   display: flex;
