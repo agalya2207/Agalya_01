@@ -1,4 +1,3 @@
-import React from 'react';
 import ContactForm from '../../components/forms/ContactForm';
 import { Mail, MapPin, Github, Linkedin, Twitter } from 'lucide-react';
 
@@ -8,7 +7,7 @@ const Contact = () => {
       <div>
         <h1 className="title-medium gradient-text">Get in Touch</h1>
         <p style={{ color: 'var(--color-text-muted)' }}>
-          Have a project in mind, looking to hire, or just want to say hello? I'd love to hear from you.
+          {"Have a project in mind, looking to hire, or just want to say hello? I'd love to hear from you."}
         </p>
       </div>
 

@@ -1,10 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '../../services/supabaseClient';
 import { Briefcase, Calendar } from 'lucide-react';
 
 const About = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!loading && location.hash) {
+      const id = location.hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        const yOffset = -100; // accounts for 80px navbar height + extra padding
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  }, [location, loading]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -72,7 +86,7 @@ const About = () => {
           </p>
         </div>
 
-        <div className="glass-panel" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div id="skills" className="glass-panel" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <h3 style={{ fontSize: '1.15rem', fontWeight: 700, borderBottom: '1px solid var(--color-border)', paddingBottom: '10px' }}>
             Core Skills
           </h3>
@@ -98,7 +112,7 @@ const About = () => {
       </section>
 
       {/* Timeline Section */}
-      <section style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <section id="experience" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
         <h2 className="title-medium" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Briefcase color="var(--color-primary)" /> Career Timeline
         </h2>

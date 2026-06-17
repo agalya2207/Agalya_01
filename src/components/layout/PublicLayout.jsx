@@ -2,6 +2,7 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import CustomCursor from '../common/CustomCursor';
 
 const PublicLayout = () => {
   return (
@@ -11,6 +12,7 @@ const PublicLayout = () => {
         <Outlet />
       </main>
       <Footer />
+      <CustomCursor />
     </div>
   );
 };
