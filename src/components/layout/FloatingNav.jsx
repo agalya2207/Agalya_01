@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Home as HomeIcon,
@@ -10,7 +9,7 @@ import {
 
 const NAV_ITEMS = [
   { to: '/',                icon: HomeIcon,    label: 'HOME' },
-  { to: '/about',           icon: User,        label: 'ABOUT' },
+  { to: '/about',           icon: User,        label: 'ABOUT ME' },
   { to: '/projects',        icon: LayoutGrid,  label: 'PROJECTS' },
   { to: '/about#skills',    icon: Code2,       label: 'SKILLS' },
   { to: '/about#experience',icon: Briefcase,   label: 'EXPERIENCE' },
