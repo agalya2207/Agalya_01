@@ -3,9 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { Lightbulb, Rocket } from 'lucide-react';
 import PropTypes from 'prop-types';
 import profilePhoto from '../../assets/profile-photo.png';
+import SkillsMainframe from '../../components/about/SkillsMainframe';
 
 const HL = ({ children }) => (
-  <span className="highlight-keyword" style={{ color: 'var(--color-secondary)', fontWeight: 600 }}>{children}</span>
+  <span className="highlight-keyword" style={{ fontWeight: 600 }}>{children}</span>
 );
 
 HL.propTypes = {
@@ -85,7 +86,7 @@ const About = () => {
           }
 
           .highlight-keyword {
-            color: var(--color-secondary) !important;
+            font-weight: 600;
           }
 
           /* Icon + text rows */
@@ -171,6 +172,8 @@ const About = () => {
           <img src={profilePhoto} alt="Agalya – Profile Photo" className="about-photo" />
         </div>
       </section>
+
+      <SkillsMainframe />
     </div>
   );
 };

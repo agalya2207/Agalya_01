@@ -43,4 +43,11 @@ Card.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.string),
   onClick: PropTypes.func,
 };
+Card.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+  image: PropTypes.string,
+  tags: PropTypes.arrayOf(PropTypes.string),
+  onClick: PropTypes.func,
+};
 export default Card;

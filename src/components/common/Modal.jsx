@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+
 
 const Modal = ({ isOpen, onClose, title, children }) => {
   const dialogRef = useRef(null);
@@ -70,6 +72,12 @@ const Modal = ({ isOpen, onClose, title, children }) => {
       </div>
     </dialog>
   );
+};
+Modal.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  title: PropTypes.string,
+  children: PropTypes.node,
 };
 
 export default Modal;

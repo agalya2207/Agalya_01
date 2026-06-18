@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../../services/supabaseClient';
 import Input from '../common/Input';
 import Button from '../common/Button';
