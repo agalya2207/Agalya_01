@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabaseClient';
 import Card from '../../components/common/Card';
 import Modal from '../../components/common/Modal';
