@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './Projects.css';
 
 // ═══════════════════════════════════════════════════
@@ -19,8 +19,9 @@ interface ProjectData {
   id: string;
   title: string;
   description: string;
-  badge: BadgeData;
   tags: TagData[];
+  githubUrl?: string;
+  liveUrl?: string;
   diagramType: 'ai-match' | 'form-builder' | 'civic';
 }
 
@@ -266,7 +267,7 @@ const FormBuilderDiagram = () => (
 
     <svg
       width="100%"
-      height="140"
+      height="150"
       viewBox="0 0 440 150"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -515,7 +516,9 @@ const ProjectCard = ({ project, featured = false }: ProjectCardProps) => {
     <article
       className="prj-card-hover"
       style={{
+        maxWidth: '1080px',
         width: '100%',
+        height: 'fit-content',
         backgroundColor: 'var(--prj-bg-card)',
         border: '1px solid var(--prj-border-card)',
         borderRadius: '16px',
@@ -529,14 +532,19 @@ const ProjectCard = ({ project, featured = false }: ProjectCardProps) => {
         style={{
           backgroundColor: 'var(--prj-bg-card-header)',
           borderBottom: '1px solid var(--prj-border-subtle)',
-          minHeight: '150px',
+          minHeight: '180px',
+          height: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
         }}
       >
         {DiagramComponent && <DiagramComponent />}
       </div>
 
       {/* ── Content Zone ── */}
-      <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <div style={{ padding: '28px', display: 'flex', flexDirection: 'column' }}>
         <Badge text={project.badge.text} color={project.badge.color} />
 
         <h3
@@ -577,10 +585,54 @@ const ProjectCard = ({ project, featured = false }: ProjectCardProps) => {
         </p>
 
         {/* Tech tags */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
           {project.tags.map((tag, i) => (
             <Tag key={i} label={tag.label} variant={tag.variant} />
           ))}
+        </div>
+
+        {/* ── Actions / Buttons ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <a
+            href={project.githubUrl || '#'}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '52px',
+              backgroundColor: 'var(--prj-bg-mini-panel)',
+              border: '1px solid var(--prj-border-light)',
+              color: 'var(--prj-text-primary)',
+              fontSize: '15px',
+              fontWeight: 600,
+              borderRadius: '12px',
+              textDecoration: 'none',
+              gap: '8px',
+            }}
+          >
+            <svg style={{ width: '20px', height: '20px' }} fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.34-1.77-1.34-1.77-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.23 1.84 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.16 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013-.4c1.02.01 2.05.14 3 .4 2.28-1.55 3.28-1.23 3.28-1.23.66 1.64.24 2.86.12 3.16.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12.01 12.01 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a
+            href={project.liveUrl || '#'}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '52px',
+              backgroundColor: 'var(--prj-accent-green)',
+              color: '#ffffff',
+              fontSize: '15px',
+              fontWeight: 600,
+              borderRadius: '12px',
+              textDecoration: 'none',
+              gap: '8px',
+              boxShadow: '0 4px 15px rgba(34,197,94,0.15)',
+            }}
+          >
+            <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            Live Demo
+          </a>
         </div>
       </div>
     </article>
@@ -592,54 +644,265 @@ const ProjectCard = ({ project, featured = false }: ProjectCardProps) => {
 // ═══════════════════════════════════════════════════
 
 const Projects = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Star field canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      draw();
+    };
+
+    // Seeded pseudo-random for stable layout
+    const rand = (() => {
+      let s = 42;
+      return () => { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646; };
+    })();
+
+    const NUM_STARS = 110;
+    const stars: any[] = [];
+    for (let i = 0; i < NUM_STARS; i++) {
+      rand(); // discarded — preserves seeded sequence
+      rand(); // discarded — preserves seeded sequence                                      
+      const b = rand();
+      const o = rand();
+      const sz = rand();
+
+      // Spread with mild clustering near center-right and bottom-left
+      let x, y;
+      if (i < 15) {
+        // Cluster near center-right
+        x = 0.55 + rand() * 0.35;
+        y = 0.25 + rand() * 0.45;
+      } else if (i < 28) {
+        // Cluster near bottom-left
+        x = 0.02 + rand() * 0.30;
+        y = 0.55 + rand() * 0.40;
+      } else {
+        x = rand();
+        y = rand();
+      }
+
+      // Mix: white, slightly blue-white
+      const blueShift = b > 0.6;
+      stars.push({
+        xFrac: x,
+        yFrac: y,
+        size: 1.0 + sz * 1.5,          // 1.0–2.5 px
+        opacity: 0.4 + o * 0.6,         // 0.4–1.0
+        blue: blueShift,
+        bright: sz > 0.85,              // few large bright dots
+      });
+    }
+
+    // 4 constellation connections (indices of star pairs)
+    const constellations = [
+      [3, 11], [11, 22], [22, 37],
+      [50, 63], [63, 78],
+    ];
+
+    function draw() {
+      if (!ctx) return;
+      const W = canvas!.width;
+      const H = canvas!.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // Draw constellation lines first (behind stars)
+      ctx.lineWidth = 0.5;
+      constellations.forEach(([a, b]) => {
+        const sa = stars[a], sb = stars[b];
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+        ctx.moveTo(sa.xFrac * W, sa.yFrac * H);
+        ctx.lineTo(sb.xFrac * W, sb.yFrac * H);
+        ctx.stroke();
+      });
+
+      // Draw stars
+      stars.forEach(star => {
+        const x = star.xFrac * W;
+        const y = star.yFrac * H;
+        const color = star.blue
+          ? `rgba(180,180,255,${star.opacity})`
+          : `rgba(255,255,255,${star.opacity})`;
+
+        ctx.beginPath();
+        ctx.arc(x, y, star.size / 2, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Extra soft glow for bright stars
+        if (star.bright) {
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, star.size * 2.5);
+          grad.addColorStop(0, star.blue ? 'rgba(200,200,255,0.25)' : 'rgba(255,255,255,0.25)');
+          grad.addColorStop(1, 'transparent');
+          ctx.beginPath();
+          ctx.arc(x, y, star.size * 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
+      });
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft } = scrollRef.current;
+    
+    const children = Array.from(scrollRef.current.children) as HTMLElement[];
+    let closestIndex = 0;
+    let minDistance = Infinity;
+    
+    children.forEach((child, index) => {
+      // 24px is the container paddingLeft
+      const distance = Math.abs(child.offsetLeft - scrollLeft - 24);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = index;
+      }
+    });
+    
+    setActiveIndex(closestIndex);
+  };
+
+  const scrollPrev = () => {
+    if (!scrollRef.current || activeIndex === 0) return;
+    const newIndex = activeIndex - 1;
+    const children = Array.from(scrollRef.current.children) as HTMLElement[];
+    const target = children[newIndex];
+    if (target) {
+      scrollRef.current.scrollTo({
+        left: target.offsetLeft - 24,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollNext = () => {
+    if (!scrollRef.current || activeIndex === projects.length - 1) return;
+    const newIndex = activeIndex + 1;
+    const children = Array.from(scrollRef.current.children) as HTMLElement[];
+    const target = children[newIndex];
+    if (target) {
+      scrollRef.current.scrollTo({
+        left: target.offsetLeft - 24,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div
-      className="prj-bg-stars"
       style={{
         minHeight: '100vh',
-        backgroundColor: 'var(--prj-bg-main)',
+        backgroundColor: '#0a0a14',
         width: '100%',
         fontFamily: 'var(--prj-font-sans)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          width: '100%',
-          padding: '0 24px',
-          paddingTop: '48px',
-        }}
-      >
-        {/* ── Header ── */}
-        <h1
-          style={{
-            fontSize: '42px',
-            fontWeight: 800,
-            color: 'var(--prj-text-primary)',
-            marginBottom: '12px',
-            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-            lineHeight: 1.1,
-            textTransform: 'none' as const,
-            letterSpacing: '-0.01em',
-          }}
-        >
-          Projects
-        </h1>
+      {/* Star field canvas */}
+      <canvas ref={canvasRef} className="star-canvas" />
 
-        {/* Accent underline */}
+      {/* Purple center glow */}
+      <div className="center-glow" />
+
+      {/* Main content wrapper */}
+      <div style={{ position: 'relative', zIndex: 10 }}>
         <div
           style={{
-            width: '56px',
-            height: '4px',
-            borderRadius: '2px',
-            background: 'linear-gradient(90deg, #a855f7, #6366f1)',
-            marginBottom: '32px',
+            width: '100%',
+            padding: '0 24px',
+            paddingTop: '48px',
           }}
-        />
+        >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '16px' }}>
+          <div>
+            {/* ── Header ── */}
+            <h1
+              style={{
+                fontSize: '42px',
+                fontWeight: 800,
+                color: 'var(--prj-text-primary)',
+                marginBottom: '12px',
+                fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+                lineHeight: 1.1,
+                textTransform: 'none' as const,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Projects
+            </h1>
+
+            {/* Accent underline */}
+            <div
+              style={{
+                width: '56px',
+                height: '4px',
+                borderRadius: '2px',
+                background: 'linear-gradient(90deg, #a855f7, #6366f1)',
+              }}
+            />
+          </div>
+
+          {/* ── Navigation ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingBottom: '4px' }}>
+            {/* Dots */}
+            <div style={{ display: 'flex', gap: '8px', marginRight: '8px' }}>
+              {projects.map((_, i) => (
+                <div 
+                  key={i} 
+                  style={{ 
+                    width: '6px', height: '6px', borderRadius: '50%', 
+                    backgroundColor: i === activeIndex ? '#a855f7' : 'rgba(255,255,255,0.2)',
+                    transition: 'background-color 0.3s ease'
+                  }} 
+                />
+              ))}
+            </div>
+
+            {/* Left/Right Buttons */}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                onClick={scrollPrev}
+                disabled={activeIndex === 0}
+                className="prj-nav-btn"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                onClick={scrollNext}
+                disabled={activeIndex === projects.length - 1}
+                className="prj-nav-btn"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Horizontal Scroll Container ── */}
       <div
         className="prj-horizontal-scroll"
+        ref={scrollRef}
+        onScroll={handleScroll}
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -658,9 +921,11 @@ const Projects = () => {
             key={project.id}
             style={{
               flexShrink: 0,
-              width: '600px',
+              width: 'calc(100vw - 48px)',
               scrollSnapAlign: 'start',
-              display: 'flex', // So ProjectCard can fill vertical space if needed
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
             }}
           >
             <ProjectCard project={project} featured={project.id === 'devhire'} />
@@ -671,25 +936,65 @@ const Projects = () => {
       {/* Custom Scrollbar Styles */}
       <style>{`
         .prj-horizontal-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(255,255,255,0.15) transparent;
+          scrollbar-width: none; /* Firefox */
         }
         .prj-horizontal-scroll::-webkit-scrollbar {
-          height: 8px;
+          display: none; /* Chrome/Safari/Edge */
         }
-        .prj-horizontal-scroll::-webkit-scrollbar-track {
-          background: transparent;
+        .prj-nav-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #14141f;
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          padding: 0;
         }
-        .prj-horizontal-scroll::-webkit-scrollbar-thumb {
-          background-color: rgba(255,255,255,0.15);
-          border-radius: 4px;
+        .prj-nav-btn:hover:not(:disabled) {
+          background: #1e1e2a;
+          border-color: rgba(255,255,255,0.2);
+          color: #ffffff;
         }
-        @media (max-width: 768px) {
-          .prj-horizontal-scroll > div {
-            width: 85vw !important; /* Adjust width on mobile */
-          }
+        .prj-nav-btn:disabled {
+          opacity: 0.3;
+          pointer-events: none;
+        }
+        .prj-nav-btn svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        /* Star field canvas */
+        .star-canvas {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        /* Purple center glow behind hero */
+        .center-glow {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 900px;
+          height: 600px;
+          background: radial-gradient(ellipse at center,
+            rgba(80, 0, 180, 0.45) 0%,
+            rgba(50, 0, 120, 0.20) 40%,
+            transparent 70%);
+          z-index: 2;
+          pointer-events: none;
         }
       `}</style>
+      </div>
     </div>
   );
 };
