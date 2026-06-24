@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Linkedin, 
@@ -25,7 +25,7 @@ const Home = () => {
       setTitleIdx((prev) => (prev + 1) % TITLES.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [TITLES.length]);
 
   // Star field canvas
   useEffect(() => {
@@ -48,8 +48,8 @@ const Home = () => {
     const NUM_STARS = 110;
     const stars = [];
     for (let i = 0; i < NUM_STARS; i++) {
-      const r = rand();
-      const g = rand();
+      rand(); // discarded — preserves seeded sequence
+      rand(); // discarded — preserves seeded sequence                                      
       const b = rand();
       const o = rand();
       const sz = rand();
@@ -440,7 +440,7 @@ const Home = () => {
           <LayoutGrid size={22} strokeWidth={1.5} className="float-nav-icon" />
           <span className="float-nav-label">PROJECTS</span>
         </Link>
-        <Link to="/about#skills" className="float-nav-item">
+        <Link to="/skills" className="float-nav-item">
           <Code2 size={22} strokeWidth={1.5} className="float-nav-icon" />
           <span className="float-nav-label">SKILLS</span>
         </Link>

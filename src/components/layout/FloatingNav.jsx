@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { to: '/',                icon: HomeIcon,    label: 'HOME' },
   { to: '/about',           icon: User,        label: 'ABOUT ME' },
   { to: '/projects',        icon: LayoutGrid,  label: 'PROJECTS' },
-  { to: '/about#skills',    icon: Code2,       label: 'SKILLS' },
+  { to: '/skills',          icon: Code2,       label: 'SKILLS' },
   { to: '/about#experience',icon: Briefcase,   label: 'EXPERIENCE' },
 ];
 

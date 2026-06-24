@@ -10,6 +10,7 @@ import Projects from '../pages/public/Projects';
 import Contact from '../pages/public/Contact';
 import About from '../pages/public/About';
 import Login from '../pages/public/Login';
+import Skills from '../pages/public/Skills';
 
 // Admin Pages
 import Dashboard from '../pages/admin/Dashboard';
@@ -25,6 +26,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/about" element={<About />} />
+        <Route path="/skills" element={<Skills />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
       </Route>
