@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Lightbulb, Rocket } from 'lucide-react';
 import PropTypes from 'prop-types';
 import profilePhoto from '../../assets/profile-photo.png';
-import SkillsMainframe from '../../components/about/SkillsMainframe';
+
 
 const HL = ({ children }) => (
   <span className="highlight-keyword" style={{ fontWeight: 600 }}>{children}</span>
@@ -173,7 +173,6 @@ const About = () => {
         </div>
       </section>
 
-      <SkillsMainframe />
     </div>
   );
 };
