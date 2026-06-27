@@ -7,8 +7,7 @@ import {
   Home as HomeIcon,
   User,
   LayoutGrid,
-  Code2,
-  Briefcase
+  Code2
 } from 'lucide-react';
 
 const Home = () => {
@@ -444,9 +443,9 @@ const Home = () => {
           <Code2 size={22} strokeWidth={1.5} className="float-nav-icon" />
           <span className="float-nav-label">SKILLS</span>
         </Link>
-        <Link to="/about#experience" className="float-nav-item">
-          <Briefcase size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className="float-nav-label">EXPERIENCE</span>
+        <Link to="/contact" className={`float-nav-item${location.pathname === '/contact' ? ' active' : ''}`}>
+          <Mail size={22} strokeWidth={1.5} className="float-nav-icon" />
+          <span className="float-nav-label">CONTACT</span>
         </Link>
       </nav>
 

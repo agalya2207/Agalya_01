@@ -31,7 +31,7 @@ const PublicLayout = () => {
             position: relative;
             z-index: 10;
             min-height: 100vh;
-            padding: ${location.pathname === '/projects' ? '0' : '100px 60px 60px 60px'};
+            padding: ${(location.pathname === '/projects' || location.pathname === '/contact') ? '0' : '100px 60px 60px 60px'};
             color: #ffffff;
             font-family: 'Poppins', 'Inter', sans-serif;
             box-sizing: border-box;
@@ -39,12 +39,12 @@ const PublicLayout = () => {
           }
           @media (max-width: 768px) {
             .space-page-content {
-              padding: ${location.pathname === '/projects' ? '0' : '100px 24px 60px 24px'};
+              padding: ${(location.pathname === '/projects' || location.pathname === '/contact') ? '0' : '100px 24px 60px 24px'};
             }
           }
           @media (max-width: 480px) {
             .space-page-content {
-              padding: ${location.pathname === '/projects' ? '0' : '80px 16px 60px 16px'};
+              padding: ${(location.pathname === '/projects' || location.pathname === '/contact') ? '0' : '80px 16px 60px 16px'};
             }
           }
         `}</style>

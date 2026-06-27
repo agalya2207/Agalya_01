@@ -4,12 +4,11 @@ import { useAuth } from '../../hooks/useAuth';
 import { LayoutDashboard, Menu, X, Moon, ArrowRight } from 'lucide-react';
 
 const NAV_LINKS = [
-  { label: 'HOME',       to: '/'        },
-  { label: 'ABOUT',      to: '/about'   },
-  { label: 'SKILLS',     to: '/skills'            },
-  { label: 'PROJECTS',   to: '/projects'           },
-  { label: 'EXPERIENCE', to: '/about#experience'   },
-  { label: 'CONTACT',    to: '/contact'            },
+  { label: 'HOME',     to: '/'        },
+  { label: 'ABOUT',    to: '/about'   },
+  { label: 'SKILLS',   to: '/skills'  },
+  { label: 'PROJECTS', to: '/projects'},
+  { label: 'CONTACT',  to: '/contact' },
 ];
 
 const Navbar = () => {
