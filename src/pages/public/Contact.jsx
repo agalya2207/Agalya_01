@@ -52,7 +52,7 @@ const Contact = () => {
       // EmailJS integration
       await emailjs.send(
         'service_eqi67uv',
-        'template_r48ap6m',
+        'template_4xke2tk',
         {
           name: formData.name,
           email: formData.email,
