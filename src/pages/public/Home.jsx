@@ -13,6 +13,7 @@ import {
 const Home = () => {
   const location = useLocation();
   const canvasRef = useRef(null);
+  const [hoveredNav, setHoveredNav] = useState(null);
 
   // Title cycling state
   const TITLES = ['Full Stack Developer', 'AI Engineer', 'UI/UX Developer'];
@@ -206,10 +207,10 @@ const Home = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 4px;
+          justify-content: center;
+          position: relative;
           color: rgba(255, 255, 255, 0.6);
           text-decoration: none;
-          transition: all 0.25s ease;
           cursor: pointer;
           background: none;
           border: none;
@@ -220,23 +221,23 @@ const Home = () => {
           color: #a78bfa;
         }
 
-        .float-nav-item:hover .float-nav-icon {
+        .float-nav-item.is-hovered .float-nav-icon,
+        .float-nav-item:focus .float-nav-icon,
+        .float-nav-item:active .float-nav-icon {
           transform: scale(1.08);
           filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
           color: #a78bfa;
         }
 
-        .float-nav-item:hover .float-nav-label {
-          color: #a78bfa;
+        .float-nav-label.show {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(-50%) translateY(0);
         }
 
         .float-nav-item.active .float-nav-icon {
           color: #a78bfa;
           filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
-        }
-
-        .float-nav-item.active .float-nav-label {
-          color: #a78bfa;
         }
 
         .float-nav-icon {
@@ -246,13 +247,25 @@ const Home = () => {
         }
 
         .float-nav-label {
+          position: absolute;
+          top: calc(100% + 12px);
+          left: 50%;
+          transform: translateX(-50%) translateY(-5px);
+          background: rgba(15, 15, 20, 0.95);
+          border: 1px solid rgba(167, 139, 250, 0.3);
+          padding: 6px 10px;
+          border-radius: 6px;
           font-family: 'Inter', sans-serif;
           font-size: 10px;
           font-weight: 500;
           letter-spacing: 1.5px;
           text-transform: uppercase;
-          color: inherit;
-          transition: color 0.25s ease;
+          color: #a78bfa;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         /* SOCIAL LINKS (Left Side) */
@@ -427,25 +440,50 @@ const Home = () => {
 
       {/* Floating Icon-Only Nav (Top Center) */}
       <nav className="float-icon-nav" aria-label="Main navigation">
-        <Link to="/" className={`float-nav-item${location.pathname === '/' ? ' active' : ''}`}>
+        <Link 
+          to="/" 
+          className={`float-nav-item${location.pathname === '/' ? ' active' : ''}${hoveredNav === 'HOME' ? ' is-hovered' : ''}`}
+          onMouseEnter={() => setHoveredNav('HOME')}
+          onMouseLeave={() => setHoveredNav(null)}
+        >
           <HomeIcon size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className="float-nav-label">HOME</span>
+          <span className={`float-nav-label${hoveredNav === 'HOME' ? ' show' : ''}`}>HOME</span>
         </Link>
-        <Link to="/about" className={`float-nav-item${location.pathname === '/about' ? ' active' : ''}`}>
+        <Link 
+          to="/about" 
+          className={`float-nav-item${location.pathname === '/about' ? ' active' : ''}${hoveredNav === 'ABOUT' ? ' is-hovered' : ''}`}
+          onMouseEnter={() => setHoveredNav('ABOUT')}
+          onMouseLeave={() => setHoveredNav(null)}
+        >
           <User size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className="float-nav-label">ABOUT</span>
+          <span className={`float-nav-label${hoveredNav === 'ABOUT' ? ' show' : ''}`}>ABOUT</span>
         </Link>
-        <Link to="/projects" className={`float-nav-item${location.pathname === '/projects' ? ' active' : ''}`}>
+        <Link 
+          to="/projects" 
+          className={`float-nav-item${location.pathname === '/projects' ? ' active' : ''}${hoveredNav === 'PROJECTS' ? ' is-hovered' : ''}`}
+          onMouseEnter={() => setHoveredNav('PROJECTS')}
+          onMouseLeave={() => setHoveredNav(null)}
+        >
           <LayoutGrid size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className="float-nav-label">PROJECTS</span>
+          <span className={`float-nav-label${hoveredNav === 'PROJECTS' ? ' show' : ''}`}>PROJECTS</span>
         </Link>
-        <Link to="/skills" className="float-nav-item">
+        <Link 
+          to="/skills" 
+          className={`float-nav-item${hoveredNav === 'SKILLS' ? ' is-hovered' : ''}`}
+          onMouseEnter={() => setHoveredNav('SKILLS')}
+          onMouseLeave={() => setHoveredNav(null)}
+        >
           <Code2 size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className="float-nav-label">SKILLS</span>
+          <span className={`float-nav-label${hoveredNav === 'SKILLS' ? ' show' : ''}`}>SKILLS</span>
         </Link>
-        <Link to="/contact" className={`float-nav-item${location.pathname === '/contact' ? ' active' : ''}`}>
+        <Link 
+          to="/contact" 
+          className={`float-nav-item${location.pathname === '/contact' ? ' active' : ''}${hoveredNav === 'CONTACT' ? ' is-hovered' : ''}`}
+          onMouseEnter={() => setHoveredNav('CONTACT')}
+          onMouseLeave={() => setHoveredNav(null)}
+        >
           <Mail size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className="float-nav-label">CONTACT</span>
+          <span className={`float-nav-label${hoveredNav === 'CONTACT' ? ' show' : ''}`}>CONTACT</span>
         </Link>
       </nav>
 
