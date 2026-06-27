@@ -549,7 +549,7 @@ const Contact = () => {
                 marginTop: '10px',
                 marginBottom: 0,
               }}>
-                ✓ MESSAGE_TRANSMITTED — I{"'"ll} get back to you within 24hrs.
+                I&apos;ll get back to you within 24hrs.
               </p>
             )}
 
