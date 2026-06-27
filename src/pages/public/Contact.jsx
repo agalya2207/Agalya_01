@@ -9,8 +9,8 @@ const SOCIAL_CARDS = [
     Icon: Linkedin,
     iconColor: '#0a66c2',
     label: 'LinkedIn',
-    handle: 'linkedin.com/in/agalya-g',
-    href: 'https://www.linkedin.com/in/agalya-g',
+    handle: 'linkedin.com/in/agalya-g-96106337b',
+    href: 'https://www.linkedin.com/in/agalya-g-96106337b',
   },
   {
     id: 'github',

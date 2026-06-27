@@ -52,7 +52,7 @@ const SocialStack = () => {
 
       <div className="socials-stack">
         <a 
-          href="https://linkedin.com" 
+          href="https://www.linkedin.com/in/agalya-g-96106337b" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="social-link"
