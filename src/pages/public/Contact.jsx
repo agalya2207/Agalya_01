@@ -58,7 +58,9 @@ const Contact = () => {
           email: formData.email,
           message: formData.message,
         },
-        'foufpjbH6OHqD53s-'
+        {
+          publicKey: 'foufpjbH6OHqD53s-',
+        }
       );
 
         // EmailJS send succeeded
