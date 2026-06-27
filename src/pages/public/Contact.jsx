@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 /* ─── Social card data ─────────────────────────────────────────── */
 const SOCIAL_CARDS = [
@@ -48,24 +49,21 @@ const Contact = () => {
     setError(false);
 
     try {
-      // Replace YOUR_FORMSPREE_URL with your Formspree endpoint
-      // e.g. https://formspree.io/f/xxxxxxxx
-      const response = await fetch('YOUR_FORMSPREE_URL', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      // EmailJS integration
+      await emailjs.send(
+        'service_eqi67uv',
+        'template_r48ap6m',
+        {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-        }),
-      });
+        },
+        'foufpjbH6OHqD53s-'
+      );
 
-      if (response.ok) {
+        // EmailJS send succeeded
         setSubmitted(true);
         setFormData({ name: '', email: '', message: '' });
-      } else {
-        setError(true);
-      }
     } catch {
       setError(true);
     } finally {
