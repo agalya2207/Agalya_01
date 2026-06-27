@@ -395,8 +395,8 @@ const SkillsMainframe = () => {
 const CSS = `
   /* Root */
   .sm-root {
-    width:100%; height:calc(100vh - 110px); display:flex; flex-direction:column; gap:12px;
-    position:relative; z-index:10; overflow:hidden; padding:10px 0; box-sizing:border-box;
+    width:100%; height:calc(100vh - 110px); display:flex; flex-direction:column; gap:8px;
+    position:relative; z-index:10; overflow:hidden; padding:0; box-sizing:border-box;
   }
 
   /* Header */
@@ -412,16 +412,16 @@ const CSS = `
   }
 
   /* Two-column */
-  .sm-cols { display:flex; flex-direction:row; gap:14px; width:100%; flex:1; min-height:0; align-items:stretch; }
+  .sm-cols { display:flex; flex-direction:row; gap:10px; width:100%; flex:1; min-height:0; align-items:stretch; }
 
   /* LEFT Cards */
-  .sm-grid { flex:0 0 56%; display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(3,1fr); gap:10px; height:100%; }
+  .sm-grid { flex:0 0 56%; display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(3,1fr); gap:8px; height:100%; }
   .sm-card {
     background:rgba(10,15,30,0.4); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-    border:1px solid rgba(168,85,247,0.18); border-radius:12px; padding:10px 12px;
+    border:1px solid rgba(168,85,247,0.18); border-radius:12px; padding:8px 10px;
     transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); position:relative; overflow:hidden;
     box-shadow:inset 0 0 20px rgba(168,85,247,0.04),0 4px 15px rgba(0,0,0,0.2);
-    display:flex; flex-direction:column; gap:4px;
+    display:flex; flex-direction:column; justify-content:space-between; gap:3px;
   }
   .sm-card::before {
     content:''; position:absolute; inset:0; border-radius:12px; padding:1px;
@@ -431,20 +431,20 @@ const CSS = `
   }
   .sm-card:hover { transform:scale(1.02) translateY(-2px); border-color:rgba(192,132,252,0.45); box-shadow:inset 0 0 20px rgba(168,85,247,0.1),0 10px 28px rgba(168,85,247,0.18); }
   .sm-card:hover::before { opacity:1; }
-  .sm-card-head { display:flex; align-items:center; gap:9px; }
+  .sm-card-head { display:flex; align-items:center; gap:6px; }
   .sm-icon-box {
-    width:30px; height:30px; border-radius:7px; background:rgba(168,85,247,0.14);
+    width:26px; height:26px; border-radius:6px; background:rgba(168,85,247,0.14);
     display:flex; align-items:center; justify-content:center; color:#C084FC;
     transition:all 0.4s ease; flex-shrink:0;
   }
   .sm-card:hover .sm-icon-box { background:rgba(168,85,247,0.25); box-shadow:0 0 10px rgba(192,132,252,0.5); transform:scale(1.1) rotate(5deg); }
   .sm-card-title { font-family:'Inter',sans-serif; font-size:0.88rem; font-weight:600; color:#fff; margin:0; line-height:1.2; }
-  .sm-card-desc { font-size:0.66rem; color:rgba(255,255,255,0.62); line-height:1.3; margin:0; flex-grow:1; }
-  .sm-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:auto; }
+  .sm-card-desc { font-size:0.68rem; color:rgba(255,255,255,0.62); line-height:1.25; margin:0; }
+  .sm-tags { display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; }
   .sm-tag {
-    font-size:0.58rem; font-weight:500; color:#C084FC;
+    font-size:0.55rem; font-weight:500; color:#C084FC;
     background:rgba(168,85,247,0.09); border:1px solid rgba(168,85,247,0.28);
-    padding:1px 5px; border-radius:10px; transition:all 0.3s ease; letter-spacing:0.3px;
+    padding:1px 4px; border-radius:8px; transition:all 0.3s ease; letter-spacing:0.2px;
   }
   .sm-tag:hover { background:rgba(168,85,247,0.2); border-color:#22D3EE; color:#22D3EE; box-shadow:0 0 8px rgba(34,211,238,0.4); transform:translateY(-1px); }
 
@@ -458,10 +458,10 @@ const CSS = `
 
   /* Top bar */
   .sm-topbar {
-    display:flex; justify-content:space-between; align-items:center; padding:9px 16px;
+    display:flex; justify-content:space-between; align-items:center; padding:6px 12px;
     border-bottom:1px solid rgba(168,85,247,0.2); background:rgba(168,85,247,0.06); flex-shrink:0;
   }
-  .sm-bar-label { font-family:'JetBrains Mono','Courier New',monospace; font-size:0.68rem; color:#A855F7; letter-spacing:1px; }
+  .sm-bar-label { font-family:'JetBrains Mono','Courier New',monospace; font-size:0.64rem; color:#A855F7; letter-spacing:1px; }
   .sm-blink { animation:smBlink 2.2s ease-in-out infinite; }
   @keyframes smBlink { 0%,100%{opacity:0.5} 50%{opacity:1;text-shadow:0 0 10px rgba(168,85,247,0.9)} }
 
@@ -582,8 +582,8 @@ const CSS = `
 
   /* Footer */
   .sm-footer {
-    text-align:center; padding:7px 0; flex-shrink:0;
-    font-family:'Inter',sans-serif; font-size:0.6rem; color:rgba(255,255,255,0.33);
+    text-align:center; padding:5px 0; flex-shrink:0;
+    font-family:'Inter',sans-serif; font-size:0.55rem; color:rgba(255,255,255,0.33);
     letter-spacing:2.5px; text-transform:uppercase;
     border-top:1px solid rgba(168,85,247,0.16); background:rgba(168,85,247,0.04);
   }
