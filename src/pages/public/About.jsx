@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Lightbulb, Rocket } from 'lucide-react';
 import PropTypes from 'prop-types';
-import profilePhoto from '../../assets/profile-photo.png';
+import profilePhoto from '../../assets/about-photo.jpeg';
 
 
 const HL = ({ children }) => (
