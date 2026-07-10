@@ -76,7 +76,7 @@ const SpaceBackground = () => {
         const x = star.xFrac * W;
         const y = star.yFrac * H;
         const color = star.blue
-          ? `rgba(180,180,255,${star.opacity})`
+          ? `rgba(160,230,220,${star.opacity})`
           : `rgba(255,255,255,${star.opacity})`;
 
         ctx.beginPath();
@@ -86,7 +86,7 @@ const SpaceBackground = () => {
 
         if (star.bright) {
           const grad = ctx.createRadialGradient(x, y, 0, x, y, star.size * 2.5);
-          grad.addColorStop(0, star.blue ? 'rgba(200,200,255,0.25)' : 'rgba(255,255,255,0.25)');
+          grad.addColorStop(0, star.blue ? 'rgba(140,220,210,0.25)' : 'rgba(255,255,255,0.25)');
           grad.addColorStop(1, 'transparent');
           ctx.beginPath();
           ctx.arc(x, y, star.size * 2.5, 0, Math.PI * 2);
@@ -112,7 +112,7 @@ const SpaceBackground = () => {
           height: 100vh;
           width: 100dvw;
           height: 100dvh;
-          background: #0a0a14;
+          background: #060d0d;
           z-index: 0;
           pointer-events: none;
         }
@@ -130,9 +130,9 @@ const SpaceBackground = () => {
           transform: translate(-50%, -50%);
           width: 900px;
           height: 600px;
-          background: radial-gradient(ellipse at center,
-            rgba(80, 0, 180, 0.45) 0%,
-            rgba(50, 0, 120, 0.20) 40%,
+          background: radial-gradient(ellipse at 60% 50%,
+            rgba(13, 148, 136, 0.40) 0%,
+            rgba(8, 100, 92, 0.18) 40%,
             transparent 70%);
           z-index: 2;
           pointer-events: none;

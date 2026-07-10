@@ -76,9 +76,9 @@ const PortfolioSidebar = () => {
           justify-content: center;
           gap: 16px;
           padding: 0 24px;
-          border-right: 1px solid rgba(139, 92, 246, 0.3);
+          border-right: 1px solid rgba(20, 184, 166, 0.3);
           background: transparent;
-          box-shadow: 10px 0 30px rgba(139, 92, 246, 0.05);
+          box-shadow: 10px 0 30px rgba(20, 184, 166, 0.05);
         }
 
         /* ── Subtle glowing line on the right of sidebar ── */
@@ -89,7 +89,7 @@ const PortfolioSidebar = () => {
           right: -1px;
           width: 2px;
           height: 100%;
-          background: linear-gradient(to bottom, transparent, rgba(139, 92, 246, 0.5), transparent);
+          background: linear-gradient(to bottom, transparent, rgba(20, 184, 166, 0.5), transparent);
           z-index: -1;
         }
 
@@ -112,27 +112,27 @@ const PortfolioSidebar = () => {
           height: 52px;
           border-radius: 14px;
           color: rgba(255, 255, 255, 0.6);
-          background: rgba(20, 16, 36, 0.4);
+          background: rgba(6, 13, 13, 0.4);
           border: 1px solid rgba(255, 255, 255, 0.08);
           transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .sidebar-item:hover .sidebar-icon {
           color: #fff;
-          background: rgba(139, 92, 246, 0.1);
-          border-color: rgba(139, 92, 246, 0.4);
+          background: rgba(20, 184, 166, 0.1);
+          border-color: rgba(20, 184, 166, 0.4);
           transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+          box-shadow: 0 4px 15px rgba(20, 184, 166, 0.2);
         }
 
         /* Active state */
         .sidebar-item.sidebar-active .sidebar-icon {
-          background: rgba(139, 92, 246, 0.15);
+          background: rgba(20, 184, 166, 0.15);
           color: #fff;
-          border: 2px solid rgba(139, 92, 246, 0.8);
+          border: 2px solid rgba(94, 234, 212, 0.8);
           box-shadow:
-            0 0 20px rgba(139, 92, 246, 0.5),
-            inset 0 0 10px rgba(139, 92, 246, 0.2);
+            0 0 20px rgba(20, 184, 166, 0.5),
+            inset 0 0 10px rgba(20, 184, 166, 0.2);
           transform: scale(1.05);
         }
 
@@ -144,8 +144,8 @@ const PortfolioSidebar = () => {
           transform: translateY(-50%) translateX(-10px);
           padding: 6px 12px;
           border-radius: 8px;
-          background: rgba(15, 10, 30, 0.95);
-          border: 1px solid rgba(139, 92, 246, 0.3);
+          background: rgba(6, 13, 13, 0.95);
+          border: 1px solid rgba(20, 184, 166, 0.3);
           color: #fff;
           font-size: 0.75rem;
           font-weight: 700;
@@ -174,8 +174,8 @@ const PortfolioSidebar = () => {
             flex-direction: row;
             padding: 12px;
             border-right: none;
-            border-top: 1px solid rgba(139, 92, 246, 0.3);
-            background: rgba(10, 5, 20, 0.9);
+            border-top: 1px solid rgba(20, 184, 166, 0.3);
+            background: rgba(6, 13, 13, 0.9);
             backdrop-filter: blur(10px);
           }
           .left-sidebar-nav::after {

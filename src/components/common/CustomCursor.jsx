@@ -110,20 +110,20 @@ const CustomCursor = () => {
     default: {
       scale: 1,
       backgroundColor: 'transparent',
-      borderColor: 'rgba(139,92,246,0.8)',
-      boxShadow: '0 0 0px rgba(139,92,246,0)',
+      borderColor: 'rgba(20,184,166,0.8)',
+      boxShadow: '0 0 0px rgba(20,184,166,0)',
     },
     hover: {
       scale: 1.5,
-      backgroundColor: 'rgba(139,92,246,0.1)',
-      borderColor: 'rgba(139,92,246,1)',
-      boxShadow: '0 0 15px rgba(139,92,246,0.5)',
+      backgroundColor: 'rgba(20,184,166,0.1)',
+      borderColor: 'rgba(20,184,166,1)',
+      boxShadow: '0 0 15px rgba(20,184,166,0.5)',
     },
     magnetic: {
       scale: 2,
-      backgroundColor: 'rgba(139,92,246,0.15)',
-      borderColor: '#8B5CF6',
-      boxShadow: '0 0 25px rgba(139,92,246,0.8)',
+      backgroundColor: 'rgba(20,184,166,0.15)',
+      borderColor: '#14b8a6',
+      boxShadow: '0 0 25px rgba(20,184,166,0.8)',
     }
   };
 
@@ -145,10 +145,10 @@ const CustomCursor = () => {
           position: absolute;
           width: 6px;
           height: 6px;
-          background-color: #8B5CF6;
+          background-color: #14b8a6;
           border-radius: 50%;
           transform: translate(-50%, -50%);
-          box-shadow: 0 0 10px #8B5CF6;
+          box-shadow: 0 0 10px #14b8a6;
           will-change: transform;
         }
 
@@ -157,7 +157,7 @@ const CustomCursor = () => {
           width: 32px;
           height: 32px;
           border-radius: 50%;
-          border: 1px solid rgba(139,92,246,0.8);
+          border: 1px solid rgba(20,184,166,0.8);
           transform: translate(-50%, -50%);
           will-change: transform, width, height, border-color, box-shadow, background-color;
           display: flex;
@@ -167,7 +167,7 @@ const CustomCursor = () => {
 
         .cursor-particle {
           position: absolute;
-          background-color: #8B5CF6;
+          background-color: #14b8a6;
           border-radius: 50%;
           transform: translate(-50%, -50%);
           pointer-events: none;

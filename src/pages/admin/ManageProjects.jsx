@@ -137,7 +137,7 @@ const ManageProjects = () => {
                         <span 
                           key={t} 
                           style={{ 
-                            background: 'rgba(139, 92, 246, 0.08)', 
+                            background: 'rgba(20, 184, 166, 0.08)', 
                             color: 'var(--color-primary)', 
                             fontSize: '0.7rem', 
                             fontWeight: 600, 

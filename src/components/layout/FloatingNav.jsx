@@ -1,158 +1,269 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home as HomeIcon,
   User,
   LayoutGrid,
-  Code2,
-  Mail
+  BarChart2,
+  MessageSquare
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { to: '/',         icon: HomeIcon,   label: 'HOME' },
-  { to: '/about',    icon: User,       label: 'ABOUT ME' },
-  { to: '/projects', icon: LayoutGrid, label: 'PROJECTS' },
-  { to: '/skills',   icon: Code2,      label: 'SKILLS' },
-  { to: '/contact',  icon: Mail,       label: 'CONTACT' },
+  { id: 'home',     hash: '#home',     path: '/',         icon: HomeIcon,      label: 'Home' },
+  { id: 'about',    hash: '#about',    path: '/about',    icon: User,          label: 'About' },
+  { id: 'skills',   hash: '#skills',   path: '/skills',   icon: LayoutGrid,    label: 'Skills' },
+  { id: 'projects', hash: '#projects', path: '/projects', icon: BarChart2,     label: 'Projects' },
+  { id: 'contact',  hash: '#contact',  path: '/contact',  icon: MessageSquare, label: 'Contact' },
 ];
 
 const FloatingNav = () => {
-  const location = useLocation();
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [activeSection, setActiveSection] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const isActive = (to) => {
-    const [path, hash] = to.split('#');
-    if (hash) {
-      return location.pathname === path && location.hash === `#${hash}`;
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check for elements matching the id (e.g. section with id="about")
+      const sections = NAV_ITEMS.map(item => document.getElementById(item.id)).filter(Boolean);
+      let current = null;
+      let maxVisibleHeight = 0;
+
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+        if (visibleHeight > maxVisibleHeight && visibleHeight > 0) {
+          maxVisibleHeight = visibleHeight;
+          current = section.id;
+        }
+      });
+      
+      if (current) {
+        setActiveSection(current);
+      } else {
+        // Fallback to route matching if no sections found in DOM (multi-page setup)
+        const match = NAV_ITEMS.find(item => item.path === location.pathname);
+        if (match) setActiveSection(match.id);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Run once on mount or route change
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [location.pathname]);
+
+  const handleClick = (e, item) => {
+    e.preventDefault();
+    const element = document.getElementById(item.id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', item.hash);
+    } else {
+      // If the section doesn't exist on this page, navigate to the route
+      navigate(item.path + item.hash);
     }
-    return location.pathname === path && !location.hash;
   };
 
   return (
     <>
       <style>{`
-        .float-icon-nav {
+        /* DESKTOP: Left Vertical Sidebar */
+        .dock-nav {
           position: fixed;
-          top: 24px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.10);
-          border-radius: 20px;
-          padding: 12px 32px;
+          left: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 70px;
+          background: rgba(8, 20, 16, 0.6);
+          border: 1px solid rgba(46, 230, 184, 0.15);
+          border-radius: 40px;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          padding: 24px 0;
           display: flex;
-          gap: 40px;
+          flex-direction: column;
           align-items: center;
-          z-index: 400;
-          pointer-events: auto;
-          white-space: nowrap;
+          gap: 20px;
+          z-index: 999;
+          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
 
-        .float-nav-item {
+        .dock-item-container {
+          position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
+        }
+
+        .dock-btn {
           position: relative;
-          color: rgba(255, 255, 255, 0.6);
-          text-decoration: none;
-          cursor: pointer;
-          background: none;
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          background: transparent;
           border: none;
-          padding: 0;
+          color: #94a3b8;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          text-decoration: none;
         }
 
-        .float-nav-item:hover {
-          color: #a78bfa;
+        .dock-btn:hover {
+          color: #2ee6b8;
+          background: rgba(46, 230, 184, 0.08);
+          box-shadow: 0 0 12px rgba(46, 230, 184, 0.15);
         }
 
-        .float-nav-item.is-hovered .float-nav-icon,
-        .float-nav-item:focus .float-nav-icon,
-        .float-nav-item:active .float-nav-icon {
-          transform: scale(1.08);
-          filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
-          color: #a78bfa;
+        .dock-btn.active {
+          color: #050a08;
+          background: #2ee6b8;
+          box-shadow: 0 0 18px rgba(46, 230, 184, 0.75);
+          border: none;
         }
 
-        .float-nav-label.show {
-          opacity: 1;
-          visibility: visible;
-          transform: translateX(-50%) translateY(0);
-        }
-
-        .float-nav-item.active .float-nav-icon {
-          color: #a78bfa;
-          filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
-        }
-
-        .float-nav-icon {
-          color: inherit;
-          transition: all 0.25s ease;
-          display: block;
-        }
-
-        .float-nav-label {
+        /* Tooltip Desktop (Right Side) */
+        .dock-tooltip {
           position: absolute;
-          top: calc(100% + 12px);
-          left: 50%;
-          transform: translateX(-50%) translateY(-5px);
-          background: rgba(15, 15, 20, 0.95);
-          border: 1px solid rgba(167, 139, 250, 0.3);
-          padding: 6px 10px;
-          border-radius: 6px;
-          font-family: 'Inter', sans-serif;
-          font-size: 10px;
+          left: 55px;
+          top: 50%;
+          transform: translateY(-50%) translateX(-10px);
+          background: rgba(8, 20, 16, 0.95);
+          border: 1px solid #2ee6b8;
+          color: #2ee6b8;
+          font-family: 'Fira Code', monospace;
+          font-size: 12px;
           font-weight: 500;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: #a78bfa;
+          padding: 6px 12px;
+          border-radius: 6px;
           opacity: 0;
-          visibility: hidden;
           pointer-events: none;
-          transition: all 0.2s ease;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+          transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          white-space: nowrap;
+          box-shadow: 0 0 10px rgba(46, 230, 184, 0.15);
+          display: flex;
+          align-items: center;
+          z-index: 1000;
         }
 
-        /* Responsive */
+        /* Anchor tooltip properly to the button center even when active text is visible */
+        .dock-btn-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .dock-tooltip.show {
+          opacity: 1;
+          transform: translateY(-50%) translateX(0);
+        }
+
+        /* Tooltip arrow pointing left */
+        .dock-tooltip::before {
+          content: '';
+          position: absolute;
+          left: -5px;
+          top: 50%;
+          transform: translateY(-50%);
+          border-width: 5px 5px 5px 0;
+          border-style: solid;
+          border-color: transparent #2ee6b8 transparent transparent;
+          display: block;
+          width: 0;
+          height: 0;
+          background: transparent;
+          box-shadow: none;
+          border-radius: 0;
+        }
+
+        .dock-indicator {
+          width: 2px;
+          height: 40px;
+          background: linear-gradient(to bottom, #2ee6b8, transparent);
+          margin-top: 4px;
+          border-radius: 1px;
+        }
+
+        /* MOBILE: Bottom Dock */
         @media (max-width: 768px) {
-          .float-icon-nav {
-            gap: 24px;
-            padding: 10px 20px;
-            border-radius: 16px;
+          .dock-nav {
+            left: 50%;
+            bottom: 20px;
+            top: auto;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 60px;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 16px;
+            border-radius: 30px;
+            gap: 0;
           }
-          .float-nav-label {
-            font-size: 9px;
-            letter-spacing: 1px;
+          
+          .dock-indicator {
+            display: none !important;
+          }
+
+          .dock-btn:hover {
+            transform: none;
+          }
+
+          .dock-btn.active {
+            transform: none;
+          }
+
+          /* Tooltip Mobile (Turn off or adjust) */
+          .dock-tooltip {
+            display: none !important;
           }
         }
 
         @media (max-width: 480px) {
-          .float-icon-nav {
-            gap: 16px;
-            padding: 8px 14px;
-            top: 16px;
-          }
-          .float-nav-label {
-            display: none;
+          .dock-nav {
+            width: calc(100% - 30px);
+            max-width: 290px;
           }
         }
       `}</style>
 
-      <nav className="float-icon-nav" aria-label="Main navigation">
-        {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
-          <Link
-            key={label}
-            to={to}
-            className={`float-nav-item${isActive(to) ? ' active' : ''}${hoveredItem === label ? ' is-hovered' : ''}`}
-            onMouseEnter={() => setHoveredItem(label)}
+      <nav className="dock-nav" aria-label="Dock navigation">
+        {NAV_ITEMS.map((item) => (
+          <div 
+            key={item.id}
+            className="dock-item-container"
+            onMouseEnter={() => setHoveredItem(item.id)}
             onMouseLeave={() => setHoveredItem(null)}
+            onClick={() => {
+              // for touch devices to show tooltip briefly or handle active
+              setHoveredItem(item.id);
+              setTimeout(() => setHoveredItem(null), 1500);
+            }}
           >
-            <Icon size={22} strokeWidth={1.5} className="float-nav-icon" />
-            <span className={`float-nav-label${hoveredItem === label ? ' show' : ''}`}>{label}</span>
-          </Link>
+            <div className="dock-btn-wrapper">
+              {/* Tooltip (Right side on desktop, top on mobile) */}
+              <div className={`dock-tooltip ${hoveredItem === item.id ? 'show' : ''}`}>
+                {item.label}
+              </div>
+
+              {/* Icon Button */}
+              <a
+                href={item.hash}
+                className={`dock-btn ${activeSection === item.id ? 'active' : ''}`}
+                onClick={(e) => handleClick(e, item)}
+                aria-label={item.label}
+              >
+                <item.icon size={20} strokeWidth={2} />
+              </a>
+            </div>
+          </div>
         ))}
+        {/* Decorative Indicator Line */}
+        <div className="dock-indicator" />
       </nav>
     </>
   );

@@ -25,6 +25,23 @@ const Navbar = () => {
   return (
     <header className="navbar-header">
       <style>{`
+        .navbar-logo {
+          font-size: 34px;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+        }
+        .logo-text-primary {
+          color: #ffffff;
+        }
+        .logo-text-accent {
+          color: var(--color-primary);
+          margin-left: 8px; /* space between AGALYA and G. */
+        }
+
         .navbar-link-upper {
           font-size: 0.78rem;
           font-weight: 700;
@@ -55,39 +72,42 @@ const Navbar = () => {
           display: flex; align-items: center; justify-content: center;
           width: 38px; height: 38px;
           border-radius: 10px;
-          background: rgba(139,92,246,.08);
-          border: 1px solid rgba(139,92,246,.2);
+          background: rgba(20,184,166,.08);
+          border: 1px solid rgba(20,184,166,.2);
           color: var(--color-text-muted);
           cursor: pointer;
           transition: var(--transition-spring);
         }
         .navbar-moon-btn:hover {
           color: var(--color-primary);
-          background: rgba(139,92,246,.18);
+          background: rgba(20,184,166,.18);
           transform: rotate(-20deg) scale(1.1);
         }
         .navbar-connect-btn {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 9px 18px;
           border-radius: 9px;
-          background: linear-gradient(135deg, var(--color-primary), hsl(258,90%,55%));
+          background: linear-gradient(135deg, var(--color-primary), hsl(175,72%,35%));
           color: #fff;
           font-size: 0.82rem; font-weight: 700;
           letter-spacing: 0.04em;
           border: none; cursor: pointer;
-          box-shadow: 0 4px 14px rgba(139,92,246,.4);
+          box-shadow: 0 4px 14px rgba(20,184,166,.4);
           transition: var(--transition-spring);
           text-decoration: none;
         }
         .navbar-connect-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 22px rgba(139,92,246,.65);
+          box-shadow: 0 6px 22px rgba(20,184,166,.65);
         }
       `}</style>
 
       <div className="navbar-container">
         {/* Logo */}
-        <Link to="/" className="navbar-logo">AG.</Link>
+        <Link to="/" className="navbar-logo">
+          <span className="logo-text-primary">AGALYA</span>
+          <span className="logo-text-accent">G.</span>
+        </Link>
 
         {/* Hamburger — mobile */}
         <button

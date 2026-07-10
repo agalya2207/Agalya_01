@@ -40,9 +40,9 @@ const AIMatchDiagram = () => (
 
     {/* Center AI Node */}
     <g transform="translate(400, 160)">
-      <circle cx="0" cy="0" r="45" fill="none" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
-      <circle cx="0" cy="0" r="35" fill="none" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="2 4" opacity="0.7" />
-      <circle cx="0" cy="0" r="25" fill="#0f172a" stroke="#8b5cf6" strokeWidth="2" />
+      <circle cx="0" cy="0" r="45" fill="none" stroke="#14b8a6" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+      <circle cx="0" cy="0" r="35" fill="none" stroke="#14b8a6" strokeWidth="1" strokeDasharray="2 4" opacity="0.7" />
+      <circle cx="0" cy="0" r="25" fill="#0f172a" stroke="#14b8a6" strokeWidth="2" />
       <text x="0" y="4" textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold" fontFamily="sans-serif">AI</text>
     </g>
 
@@ -88,7 +88,7 @@ const FormBuilderDiagram = () => (
     <rect x="245" y="155" width="70" height="20" rx="3" fill="#1e293b" />
     <rect x="250" y="162" width="40" height="2" fill="#475569" />
     <rect x="250" y="168" width="30" height="2" fill="#475569" />
-    <rect x="295" y="158" width="14" height="14" rx="2" fill="#8b5cf6" />
+    <rect x="295" y="158" width="14" height="14" rx="2" fill="#14b8a6" />
     <text x="302" y="168" textAnchor="middle" fill="#fff" fontSize="9" fontWeight="bold">P</text>
   </svg>
 );
@@ -108,10 +108,10 @@ const CivicDiagram = () => (
 
     {/* Center AI Node */}
     <g transform="translate(195, 110)">
-      <rect x="-40" y="-35" width="80" height="70" rx="8" fill="#0f172a" stroke="#8b5cf6" strokeWidth="1.5" />
-      <circle cx="0" cy="-5" r="14" fill="none" stroke="#8b5cf6" strokeWidth="1.5" />
+      <rect x="-40" y="-35" width="80" height="70" rx="8" fill="#0f172a" stroke="#14b8a6" strokeWidth="1.5" />
+      <circle cx="0" cy="-5" r="14" fill="none" stroke="#14b8a6" strokeWidth="1.5" />
       <text x="0" y="-1" textAnchor="middle" fill="#fff" fontSize="10" fontWeight="bold" fontFamily="sans-serif">AI</text>
-      <text x="0" y="24" textAnchor="middle" fill="#8b5cf6" fontSize="7">CLASSIFY & ROUTE</text>
+      <text x="0" y="24" textAnchor="middle" fill="#14b8a6" fontSize="7">CLASSIFY & ROUTE</text>
       <circle cx="30" cy="-25" r="3" fill="#10b981" />
     </g>
 

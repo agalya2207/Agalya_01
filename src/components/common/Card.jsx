@@ -20,7 +20,7 @@ const Card = ({ title, description, image, tags, onClick }) => {
             <span 
               key={tag} 
               style={{ 
-                background: 'rgba(139, 92, 246, 0.1)', 
+                background: 'rgba(20, 184, 166, 0.1)', 
                 color: 'var(--color-primary)', 
                 fontSize: '0.75rem', 
                 fontWeight: 600, 

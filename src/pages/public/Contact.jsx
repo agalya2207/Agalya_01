@@ -23,7 +23,7 @@ const SOCIAL_CARDS = [
   {
     id: 'email',
     Icon: Mail,
-    iconColor: '#a78bfa',
+    iconColor: '#2dd4bf',
     label: 'Email',
     handle: 'agalya.2207@gmail.com',
     href: 'mailto:agalya.2207@gmail.com',
@@ -125,7 +125,7 @@ const Contact = () => {
           font-size: 0.7rem;
           font-weight: 700;
           letter-spacing: 0.14em;
-          color: #7c3aed;
+          color: #0d9488;
           text-transform: uppercase;
           margin: 0;
         }
@@ -143,7 +143,7 @@ const Contact = () => {
         .ct-underline {
           width: 52px;
           height: 3px;
-          background: linear-gradient(90deg, #7c3aed, #a78bfa);
+          background: linear-gradient(90deg, #0d9488, #2dd4bf);
           border-radius: 2px;
           margin: 0;
         }
@@ -175,7 +175,7 @@ const Contact = () => {
           font-size: 0.65rem;
           font-weight: 700;
           letter-spacing: 0.15em;
-          color: rgba(167,139,250,0.8);
+          color: rgba(45,212,191,0.8);
           text-transform: uppercase;
         }
 
@@ -198,8 +198,8 @@ const Contact = () => {
         }
 
         .ct-input:focus, .ct-textarea:focus {
-          border-color: #7c3aed;
-          box-shadow: 0 0 0 3px rgba(124,58,237,0.18);
+          border-color: #0d9488;
+          box-shadow: 0 0 0 3px rgba(13,148,136,0.18);
         }
 
         .ct-textarea {
@@ -211,7 +211,7 @@ const Contact = () => {
         .ct-submit-btn {
           width: 100%;
           padding: 13px 0;
-          background: linear-gradient(135deg, #7c3aed, #6d28d9);
+          background: linear-gradient(135deg, #0d9488, #0f766e);
           border: none;
           border-radius: 9px;
           color: #fff;
@@ -221,14 +221,14 @@ const Contact = () => {
           letter-spacing: 0.12em;
           cursor: pointer;
           transition: all 0.25s ease;
-          box-shadow: 0 4px 16px rgba(124,58,237,0.4);
+          box-shadow: 0 4px 16px rgba(13,148,136,0.4);
           margin-top: 4px;
         }
 
         .ct-submit-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(124,58,237,0.6);
-          background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+          box-shadow: 0 8px 24px rgba(13,148,136,0.6);
+          background: linear-gradient(135deg, #14b8a6, #0d9488);
         }
 
         .ct-submit-btn:active {
@@ -286,15 +286,15 @@ const Contact = () => {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(124,58,237,0.04), transparent);
+          background: linear-gradient(135deg, rgba(13,148,136,0.04), transparent);
           opacity: 0;
           transition: opacity 0.25s ease;
           border-radius: inherit;
         }
 
         .ct-card:hover {
-          border-color: #7c3aed;
-          background: rgba(124,58,237,0.06);
+          border-color: #0d9488;
+          background: rgba(13,148,136,0.06);
           transform: translateX(4px);
         }
 
@@ -315,7 +315,7 @@ const Contact = () => {
         }
 
         .ct-card:hover .ct-card-icon-wrap {
-          background: rgba(124,58,237,0.15);
+          background: rgba(13,148,136,0.15);
         }
 
         .ct-card-text {
@@ -343,7 +343,7 @@ const Contact = () => {
         }
 
         .ct-card:hover .ct-card-handle {
-          color: rgba(167,139,250,0.7);
+          color: rgba(45,212,191,0.7);
         }
 
         .ct-card-arrow {
@@ -354,7 +354,7 @@ const Contact = () => {
         }
 
         .ct-card:hover .ct-card-arrow {
-          color: #a78bfa;
+          color: #2dd4bf;
           transform: translate(2px, -2px);
         }
 
@@ -587,7 +587,7 @@ const Contact = () => {
                 aria-label={`Visit ${label}`}
               >
                 <div className="ct-card-icon-wrap">
-                  <Icon size={20} color={hoveredCard === id ? '#a78bfa' : iconColor} strokeWidth={1.8} />
+                  <Icon size={20} color={hoveredCard === id ? '#2dd4bf' : iconColor} strokeWidth={1.8} />
                 </div>
                 <div className="ct-card-text">
                   <p className="ct-card-label">{label}</p>

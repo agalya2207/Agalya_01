@@ -1,545 +1,793 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  Linkedin, 
-  Github, 
-  Mail,
+import {
   Home as HomeIcon,
   User,
   LayoutGrid,
-  Code2
+  BarChart2,
+  MessageSquare,
+  Instagram,
+  Mail,
+  Linkedin,
+  FileText,
+  Flag,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import profilePhoto from '../../assets/profile-photo.png';
+
+/* ─── NAV items (used by left sidebar) ─── */
+const NAV_ITEMS = [
+  { id: 'home',     path: '/',         icon: HomeIcon,      label: 'Home' },
+  { id: 'about',    path: '/about',    icon: User,          label: 'About' },
+  { id: 'skills',   path: '/skills',   icon: LayoutGrid,    label: 'Skills' },
+  { id: 'projects', path: '/projects', icon: BarChart2,     label: 'Projects' },
+  { id: 'contact',  path: '/contact',  icon: MessageSquare, label: 'Contact' },
+];
 
 const Home = () => {
   const location = useLocation();
   const canvasRef = useRef(null);
   const [hoveredNav, setHoveredNav] = useState(null);
 
-  // Title cycling state
-  const TITLES = ['Full Stack Developer', 'AI Engineer', 'UI/UX Developer'];
-  const [titleIdx, setTitleIdx] = useState(0);
-
-  // Cycle titles every 2 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTitleIdx((prev) => (prev + 1) % TITLES.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [TITLES.length]);
-
-  // Star field canvas
+  /* ── Matrix / particle canvas ── */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    let animId;
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       draw();
     };
+    window.addEventListener('resize', resize);
 
-    // Seeded pseudo-random for stable layout
+    /* Seeded pseudo-random for stable layout */
     const rand = (() => {
-      let s = 42;
+      let s = 99;
       return () => { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646; };
     })();
 
-    const NUM_STARS = 110;
-    const stars = [];
-    for (let i = 0; i < NUM_STARS; i++) {
-      rand(); // discarded — preserves seeded sequence
-      rand(); // discarded — preserves seeded sequence                                      
-      const b = rand();
-      const o = rand();
-      const sz = rand();
+    /* Tiny teal dots */
+    const NUM_DOTS = 140;
+    const dots = Array.from({ length: NUM_DOTS }, () => ({
+      xFrac: rand(),
+      yFrac: rand(),
+      r: 0.6 + rand() * 1.2,
+      opacity: 0.05 + rand() * 0.18,
+    }));
 
-      // Spread with mild clustering near center-right and bottom-left
-      let x, y;
-      if (i < 15) {
-        // Cluster near center-right
-        x = 0.55 + rand() * 0.35;
-        y = 0.25 + rand() * 0.45;
-      } else if (i < 28) {
-        // Cluster near bottom-left
-        x = 0.02 + rand() * 0.30;
-        y = 0.55 + rand() * 0.40;
-      } else {
-        x = rand();
-        y = rand();
-      }
-
-      // Mix: white, slightly blue-white
-      const blueShift = b > 0.6;
-      stars.push({
-        xFrac: x,
-        yFrac: y,
-        size: 1.0 + sz * 1.5,          // 1.0–2.5 px
-        opacity: 0.4 + o * 0.6,         // 0.4–1.0
-        blue: blueShift,
-        bright: sz > 0.85,              // few large bright dots
-      });
-    }
-
-    // 4 constellation connections (indices of star pairs)
-    const constellations = [
-      [3, 11], [11, 22], [22, 37],
-      [50, 63], [63, 78],
-    ];
+    /* Diagonal hairlines */
+    const NUM_LINES = 18;
+    const lines = Array.from({ length: NUM_LINES }, () => ({
+      x1Frac: rand(),
+      y1Frac: rand(),
+      len: 80 + rand() * 220,
+      angle: 30 + rand() * 30,   // 30-60 deg diagonal
+      opacity: 0.025 + rand() * 0.055,
+    }));
 
     function draw() {
       const W = canvas.width;
       const H = canvas.height;
       ctx.clearRect(0, 0, W, H);
 
-      // Draw constellation lines first (behind stars)
-      ctx.lineWidth = 0.5;
-      constellations.forEach(([a, b]) => {
-        const sa = stars[a], sb = stars[b];
+      /* diagonal lines */
+      lines.forEach(ln => {
+        const x1 = ln.x1Frac * W;
+        const y1 = ln.y1Frac * H;
+        const rad = (ln.angle * Math.PI) / 180;
+        const x2 = x1 + Math.cos(rad) * ln.len;
+        const y2 = y1 + Math.sin(rad) * ln.len;
         ctx.beginPath();
-        ctx.strokeStyle = 'rgba(255,255,255,0.10)';
-        ctx.moveTo(sa.xFrac * W, sa.yFrac * H);
-        ctx.lineTo(sb.xFrac * W, sb.yFrac * H);
+        ctx.strokeStyle = `rgba(45,212,191,${ln.opacity})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
         ctx.stroke();
       });
 
-      // Draw stars
-      stars.forEach(star => {
-        const x = star.xFrac * W;
-        const y = star.yFrac * H;
-        const color = star.blue
-          ? `rgba(180,180,255,${star.opacity})`
-          : `rgba(255,255,255,${star.opacity})`;
-
+      /* teal dots */
+      dots.forEach(d => {
         ctx.beginPath();
-        ctx.arc(x, y, star.size / 2, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.arc(d.xFrac * W, d.yFrac * H, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(45,212,191,${d.opacity})`;
         ctx.fill();
-
-        // Extra soft glow for bright stars
-        if (star.bright) {
-          const grad = ctx.createRadialGradient(x, y, 0, x, y, star.size * 2.5);
-          grad.addColorStop(0, star.blue ? 'rgba(200,200,255,0.25)' : 'rgba(255,255,255,0.25)');
-          grad.addColorStop(1, 'transparent');
-          ctx.beginPath();
-          ctx.arc(x, y, star.size * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = grad;
-          ctx.fill();
-        }
       });
     }
 
-    resize();
-    window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
+    draw();
+    /* No animation loop needed for static texture */
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animId);
+    };
   }, []);
 
+  /* ── Active nav section derived from pathname ── */
+  const activeNav = NAV_ITEMS.find(n => n.path === location.pathname)?.id ?? 'home';
+
   return (
-    <div className="glass-portfolio-container">
+    <div className="hp-root">
       <style>{`
-        /* Container Styling */
-        .glass-portfolio-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          width: 100dvw;
-          height: 100dvh;
-          background: #0a0a14;
-          color: #ffffff;
-          font-family: 'Poppins', 'Inter', sans-serif;
-          box-sizing: border-box;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          z-index: 100;
-          user-select: none;
+        /* ═══════════════════════════════════════════
+           CSS VARIABLES
+        ═══════════════════════════════════════════ */
+        :root {
+          --bg-black:    #0a0e0f;
+          --bg-card:     rgba(8,20,18,0.60);
+          --teal-accent: #2dd4bf;
+          --teal-glow:   rgba(45,212,191,0.35);
+          --text-light:  #ffffff;
+          --text-gray:   #cbd5e1;
+          --text-muted:  #64748b;
+          --border-teal: rgba(45,212,191,0.25);
         }
 
-        /* Star field canvas */
-        .star-canvas {
+        /* ═══════════════════════════════════════════
+           ROOT WRAPPER
+        ═══════════════════════════════════════════ */
+        .hp-root {
+          position: fixed;
+          inset: 0;
+          background: var(--bg-black);
+          color: var(--text-light);
+          font-family: 'Poppins', 'Inter', sans-serif;
+          overflow: hidden;
+          display: flex;
+          align-items: stretch;
+        }
+
+        /* ═══════════════════════════════════════════
+           MATRIX CANVAS BACKGROUND
+        ═══════════════════════════════════════════ */
+        .hp-canvas {
           position: absolute;
-          top: 0; left: 0;
-          width: 100%; height: 100%;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+        }
+
+        /* Ambient teal radial glow right side */
+        .hp-glow-r {
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 65vw;
+          height: 100vh;
+          background: radial-gradient(ellipse at 75% 50%,
+            rgba(13,148,136,0.22) 0%,
+            rgba(6,82,76,0.10) 40%,
+            transparent 72%);
           z-index: 1;
           pointer-events: none;
         }
 
-        /* Purple center glow behind hero */
-        .center-glow {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          width: 900px;
-          height: 600px;
-          background: radial-gradient(ellipse at center,
-            rgba(80, 0, 180, 0.45) 0%,
-            rgba(50, 0, 120, 0.20) 40%,
-            transparent 70%);
-          z-index: 2;
-          pointer-events: none;
-        }
-
-        /* FLOATING ICON NAV (Top Center) */
-        .float-icon-nav {
+        /* ═══════════════════════════════════════════
+           LEFT VERTICAL SIDEBAR
+        ═══════════════════════════════════════════ */
+        .hp-sidebar {
           position: fixed;
-          top: 24px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.10);
-          border-radius: 20px;
-          padding: 12px 32px;
-          display: flex;
-          gap: 40px;
-          align-items: center;
-          z-index: 400;
-          pointer-events: auto;
-          white-space: nowrap;
-        }
-
-        .float-nav-item {
+          left: 24px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 900;
           display: flex;
           flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          background: rgba(8,20,18,0.68);
+          border: 1px solid var(--border-teal);
+          border-radius: 40px;
+          padding: 22px 0 20px;
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          box-shadow: 0 8px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(45,212,191,0.08);
+          width: 64px;
+        }
+
+        .hp-sb-btn {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          border: none;
+          background: transparent;
+          color: #64748b;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.28s ease;
+          text-decoration: none;
+          position: relative;
+        }
+        .hp-sb-btn:hover {
+          color: var(--teal-accent);
+          background: rgba(45,212,191,0.09);
+        }
+        .hp-sb-btn.active {
+          color: #040e0d;
+          background: var(--teal-accent);
+          box-shadow: 0 0 20px rgba(45,212,191,0.70);
+        }
+
+        /* Tooltip on hover */
+        .hp-sb-tip {
+          position: absolute;
+          left: calc(100% + 12px);
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(8,20,18,0.95);
+          border: 1px solid var(--teal-accent);
+          color: var(--teal-accent);
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 11px;
+          padding: 5px 10px;
+          border-radius: 6px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .hp-sb-btn:hover .hp-sb-tip { opacity: 1; }
+
+        /* Bottom teal scroll indicator */
+        .hp-sb-line {
+          width: 2px;
+          height: 36px;
+          background: linear-gradient(to bottom, var(--teal-accent), transparent);
+          border-radius: 2px;
+          margin-top: 8px;
+        }
+
+        /* ═══════════════════════════════════════════
+           TOP-RIGHT SOCIAL BAR
+        ═══════════════════════════════════════════ */
+        .hp-socials-bar {
+          position: fixed;
+          top: 22px;
+          right: 28px;
+          z-index: 900;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .hp-soc-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          background: rgba(8,20,18,0.72);
+          border: 1px solid rgba(45,212,191,0.15);
+          color: #94a3b8;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          text-decoration: none;
+          backdrop-filter: blur(10px);
+        }
+        .hp-soc-btn:hover {
+          color: var(--teal-accent);
+          border-color: rgba(45,212,191,0.45);
+          box-shadow: 0 0 12px rgba(45,212,191,0.20);
+        }
+
+        .hp-cv-btn {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          padding: 8px 18px;
+          border-radius: 10px;
+          background: rgba(8,20,18,0.72);
+          border: 1.5px solid var(--teal-accent);
+          color: var(--teal-accent);
+          font-family: 'Poppins', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          backdrop-filter: blur(10px);
+          letter-spacing: 0.5px;
+        }
+        .hp-cv-btn:hover {
+          background: rgba(45,212,191,0.12);
+          box-shadow: 0 0 20px rgba(45,212,191,0.30);
+        }
+
+        /* ═══════════════════════════════════════════
+           MAIN TWO-COLUMN HERO LAYOUT
+        ═══════════════════════════════════════════ */
+        .hp-main {
+          position: relative;
+          z-index: 10;
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 60px 0 110px;   /* left: account for sidebar */
+          gap: 48px;
+          overflow: hidden;
+        }
+
+        /* ═══════════════════════════════════════════
+           LEFT CONTENT
+        ═══════════════════════════════════════════ */
+        .hp-left {
+          flex: 0 0 45%;
+          max-width: 520px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          animation: slideUpFadeIn 0.9s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        @keyframes slideUpFadeIn {
+          from { opacity: 0; transform: translateY(28px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hello World badge */
+        .hp-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 16px;
+          border: 1.5px solid var(--teal-accent);
+          border-radius: 50px;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 13px;
+          color: var(--teal-accent);
+          background: rgba(45,212,191,0.06);
+          letter-spacing: 0.5px;
+          align-self: flex-start;
+          animation: slideUpFadeIn 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        /* Name heading */
+        .hp-name {
+          font-family: 'Poppins', sans-serif;
+          font-size: clamp(3.2rem, 5.5vw, 5rem);
+          font-weight: 800;
+          line-height: 1.0;
+          letter-spacing: -0.02em;
+          color: var(--text-light);
+          margin: 0;
+          animation: slideUpFadeIn 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .hp-name .teal { color: var(--teal-accent); }
+
+        /* Sub-heading */
+        .hp-subtitle {
+          font-family: 'Poppins', sans-serif;
+          font-size: clamp(1.1rem, 2vw, 1.5rem);
+          font-weight: 700;
+          color: var(--teal-accent);
+          margin: 0;
+          animation: slideUpFadeIn 0.8s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        /* Description box */
+        .hp-desc-box {
+          border: 1.5px solid var(--border-teal);
+          border-radius: 14px;
+          background: rgba(8,20,18,0.42);
+          backdrop-filter: blur(10px);
+          padding: 18px 22px;
+          animation: slideUpFadeIn 0.8s 0.4s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .hp-desc-box p {
+          margin: 0;
+          font-size: 14.5px;
+          line-height: 1.7;
+          color: var(--text-gray);
+        }
+
+        /* Stats row */
+        .hp-stats {
+          display: flex;
+          gap: 36px;
+          animation: slideUpFadeIn 0.8s 0.55s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .hp-stat-num {
+          font-family: 'Poppins', sans-serif;
+          font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+          font-weight: 800;
+          color: var(--text-light);
+          line-height: 1;
+          margin-bottom: 4px;
+        }
+        .hp-stat-lbl {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--teal-accent);
+        }
+
+        /* ═══════════════════════════════════════════
+           RIGHT — HUD FRAME + PROFILE
+        ═══════════════════════════════════════════ */
+        .hp-right {
+          flex: 0 0 50%;
+          display: flex;
           align-items: center;
           justify-content: center;
           position: relative;
-          color: rgba(255, 255, 255, 0.6);
-          text-decoration: none;
-          cursor: pointer;
-          background: none;
-          border: none;
-          padding: 0;
+          animation: slideUpFadeIn 1s 0.2s cubic-bezier(0.16,1,0.3,1) both;
         }
 
-        .float-nav-item:hover {
-          color: #a78bfa;
+        /* HUD outer frame */
+        .hud-frame {
+          position: relative;
+          width: min(420px, 42vw);
+          height: min(520px, 75vh);
+          flex-shrink: 0;
         }
 
-        .float-nav-item.is-hovered .float-nav-icon,
-        .float-nav-item:focus .float-nav-icon,
-        .float-nav-item:active .float-nav-icon {
-          transform: scale(1.08);
-          filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
-          color: #a78bfa;
-        }
-
-        .float-nav-label.show {
-          opacity: 1;
-          visibility: visible;
-          transform: translateX(-50%) translateY(0);
-        }
-
-        .float-nav-item.active .float-nav-icon {
-          color: #a78bfa;
-          filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
-        }
-
-        .float-nav-icon {
-          color: inherit;
-          transition: all 0.25s ease;
-          display: block;
-        }
-
-        .float-nav-label {
+        /* The octagon / rounded-rect border with corner cut brackets */
+        .hud-border {
           position: absolute;
-          top: calc(100% + 12px);
-          left: 50%;
-          transform: translateX(-50%) translateY(-5px);
-          background: rgba(15, 15, 20, 0.95);
-          border: 1px solid rgba(167, 139, 250, 0.3);
-          padding: 6px 10px;
-          border-radius: 6px;
-          font-family: 'Inter', sans-serif;
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: #a78bfa;
-          opacity: 0;
-          visibility: hidden;
+          inset: 0;
+          border: 1.5px solid rgba(45,212,191,0.35);
+          /* Clip corners at 45° for octagon effect */
+          clip-path: polygon(
+            28px 0%, calc(100% - 28px) 0%,
+            100% 28px, 100% calc(100% - 28px),
+            calc(100% - 28px) 100%, 28px 100%,
+            0% calc(100% - 28px), 0% 28px
+          );
+          border-radius: 4px;
+          z-index: 2;
+          background: rgba(8,20,18,0.15);
+          backdrop-filter: blur(6px);
+        }
+
+        /* Corner bracket overlays — top-left */
+        .hud-corner {
+          position: absolute;
+          width: 36px;
+          height: 36px;
+          z-index: 5;
+          animation: floatBracket 3.2s ease-in-out infinite;
+        }
+        .hud-corner.tl { top: -2px; left: -2px; }
+        .hud-corner.tr { top: -2px; right: -2px; transform: scaleX(-1); }
+        .hud-corner.bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+        .hud-corner.br { bottom: -2px; right: -2px; transform: scale(-1,-1);
+                          animation-delay: 1.6s; }
+
+        @keyframes floatBracket {
+          0%, 100% { transform: translate(0, 0); }
+          50%       { transform: translate(0, -5px); }
+        }
+        .hud-corner.tr { animation-delay: 0.4s; }
+        .hud-corner.bl { animation-delay: 0.8s; }
+
+        /* Profile image inside the HUD */
+        .hud-profile-wrap {
+          position: absolute;
+          inset: 0;
+          clip-path: polygon(
+            28px 0%, calc(100% - 28px) 0%,
+            100% 28px, 100% calc(100% - 28px),
+            calc(100% - 28px) 100%, 28px 100%,
+            0% calc(100% - 28px), 0% 28px
+          );
+          overflow: hidden;
+          z-index: 1;
+        }
+        .hud-profile-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center top;
+          filter: brightness(0.75) saturate(0.85);
+        }
+
+        /* Subtle code scrolling text overlay */
+        .hud-code-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
           pointer-events: none;
-          transition: all 0.2s ease;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
+          opacity: 0.18;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 9px;
+          color: var(--teal-accent);
+          line-height: 1.4;
+          padding: 10px;
+          animation: scrollCode 18s linear infinite;
+          white-space: pre;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+        }
+        @keyframes scrollCode {
+          from { transform: translateY(0); }
+          to   { transform: translateY(-50%); }
         }
 
-        /* SOCIAL LINKS (Left Side) */
-        .socials-stack {
+        /* Teal ambient glow behind the image */
+        .hud-glow {
           position: absolute;
-          left: 50px;
-          bottom: 60px;
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-          z-index: 300;
-          pointer-events: auto;
-        }
-        .social-link {
-          color: rgba(255, 255, 255, 0.6);
-          transition: color 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .social-link:hover {
-          color: #7b2fff;
+          inset: -30px;
+          background: radial-gradient(ellipse at 50% 50%,
+            rgba(45,212,191,0.12) 0%, transparent 70%);
+          z-index: 0;
+          pointer-events: none;
         }
 
-        /* HERO SECTION */
-        .glass-hero {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          max-width: 800px;
-          padding: 0 20px;
-          z-index: 250;
-          pointer-events: auto;
+        /* ── Floating HUD Widgets around the frame ── */
+        .hud-widget {
+          position: absolute;
+          background: rgba(6,16,14,0.80);
+          border: 1px solid rgba(45,212,191,0.25);
+          border-radius: 10px;
+          padding: 10px 13px;
+          backdrop-filter: blur(12px);
+          z-index: 20;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 9.5px;
+          color: #94a3b8;
+          pointer-events: none;
         }
-
-        .hero-name {
-          font-family: 'Poppins', 'Inter', sans-serif;
-          font-size: clamp(3.5rem, 7vw, 5.5rem);
-          font-weight: 800;
-          margin: 0 0 24px 0;
-          color: #ffffff;
-          letter-spacing: -0.02em;
-        }
-
-        /* Cycling title — no box, plain text */
-        .title-plain-container {
-          margin-bottom: 28px;
-          text-align: center;
-        }
-        .title-plain-text {
-          font-family: 'Poppins', 'Inter', sans-serif;
-          font-size: 24px;
-          font-weight: 600;
-          color: #a78bfa;
-          letter-spacing: 1px;
-          background: none;
-          border: none;
-          padding: 0;
+        .hw-dot {
+          width: 5px; height: 5px;
+          border-radius: 50%;
+          background: var(--teal-accent);
+          box-shadow: 0 0 6px var(--teal-accent);
           display: inline-block;
-          text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
-          animation: fadeCycle 2s linear forwards;
+          margin-right: 5px;
+          vertical-align: middle;
+        }
+        .hw-title {
+          color: var(--teal-accent);
+          font-size: 9px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          margin-bottom: 5px;
+        }
+        /* Widget positions */
+        .hw-chart { top: 60px; right: -90px; width: 100px; animation: floatUp 4s ease-in-out infinite; }
+        .hw-drop  { bottom: 120px; right: -80px; width: 85px; animation: floatUp 5.1s 0.8s ease-in-out infinite; }
+        .hw-cursor{ top: 180px; left: -95px; width: 90px; animation: floatUp 3.7s 0.4s ease-in-out infinite; }
+        .hw-bell  { bottom: 60px;  left: -85px; width: 80px; animation: floatUp 4.4s 1.2s ease-in-out infinite; }
+
+        @keyframes floatUp {
+          0%,100% { transform: translateY(0); }
+          50%      { transform: translateY(-8px); }
         }
 
-        @keyframes fadeCycle {
-          0% { opacity: 0; transform: translateY(5px); }
-          20% { opacity: 1; transform: translateY(0); }
-          80% { opacity: 1; transform: translateY(0); }
-          100% { opacity: 0; transform: translateY(-5px); }
+        /* ════════════════════════════════════════════
+           RESPONSIVE
+        ════════════════════════════════════════════ */
+        @media (max-width: 1100px) {
+          .hp-main { padding: 0 36px 0 100px; gap: 28px; }
+          .hud-frame { width: min(360px, 40vw); height: min(460px, 70vh); }
+          .hw-chart, .hw-drop { right: -70px; }
+          .hw-cursor, .hw-bell { left: -75px; }
         }
 
-        /* Tagline styles */
-        .hero-tagline {
-          font-family: 'Inter', sans-serif;
-          font-size: 17px;
-          font-weight: 300;
-          line-height: 1.6;
-          color: rgba(255, 255, 255, 0.6);
-          max-width: 650px;
-          margin: 0 auto 36px;
-        }
-
-        /* GET IN TOUCH Button — pill style */
-        .cta-button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(10, 10, 20, 0.6);
-          color: #ffffff;
-          border-radius: 50px;
-          border: 1.5px solid rgba(140, 80, 255, 0.75);
-          padding: 18px 56px;
-          font-family: 'Poppins', 'Inter', sans-serif;
-          font-weight: 600;
-          font-size: 15px;
-          text-decoration: none;
-          letter-spacing: 3px;
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          box-shadow:
-            0 0 15px rgba(120, 60, 255, 0.35),
-            0 0 30px rgba(120, 60, 255, 0.15),
-            inset 0 0 20px rgba(100, 40, 255, 0.08);
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-        .cta-button:hover {
-          border-color: rgba(160, 100, 255, 1.0);
-          background: rgba(80, 20, 180, 0.15);
-          box-shadow:
-            0 0 25px rgba(120, 60, 255, 0.6),
-            0 0 50px rgba(120, 60, 255, 0.25);
-          transform: translateY(-2px);
-        }
-
-
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .float-icon-nav {
-            gap: 24px;
-            padding: 10px 20px;
-            border-radius: 16px;
+        @media (max-width: 900px) {
+          .hp-main {
+            flex-direction: column-reverse;
+            padding: 90px 28px 30px;
+            overflow-y: auto;
+            align-items: center;
           }
-          .float-nav-label {
-            font-size: 9px;
-            letter-spacing: 1px;
-          }
-          .socials-stack {
-            left: 50%;
+          .hp-left { flex: none; width: 100%; max-width: 520px; align-items: flex-start; }
+          .hp-right { flex: none; width: 100%; }
+          .hud-frame { width: min(300px, 70vw); height: min(380px, 55vw); }
+          .hw-chart, .hw-drop, .hw-cursor, .hw-bell { display: none; }
+        }
+
+        @media (max-width: 600px) {
+          .hp-sidebar {
+            left: 50%; top: auto; bottom: 16px;
             transform: translateX(-50%);
-            bottom: 80px;
             flex-direction: row;
-            gap: 32px;
+            width: auto; height: 60px;
+            padding: 0 18px;
+            border-radius: 30px;
+            gap: 6px;
           }
-          .hero-tagline {
-            font-size: 15px;
-            margin-bottom: 28px;
-          }
-          .center-glow {
-            width: 100vw;
-            height: 400px;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .float-icon-nav {
-            gap: 16px;
-            padding: 8px 14px;
-            top: 16px;
-          }
-          .float-nav-label {
-            display: none;
-          }
-          .socials-stack {
-            bottom: 80px;
-          }
-          .cta-button {
-            padding: 14px 36px;
-            font-size: 13px;
-            letter-spacing: 2px;
-          }
+          .hp-sb-line { display: none; }
+          .hp-sb-tip  { display: none; }
+          .hp-socials-bar { top: 14px; right: 16px; gap: 7px; }
+          .hp-soc-btn { width: 34px; height: 34px; border-radius: 8px; }
+          .hp-cv-btn { padding: 6px 12px; font-size: 12px; }
+          .hp-main { padding: 80px 16px 90px; }
         }
       `}</style>
 
-      {/* Star field canvas */}
-      <canvas ref={canvasRef} className="star-canvas" />
+      {/* ── Matrix / Particle canvas background ── */}
+      <canvas ref={canvasRef} className="hp-canvas" />
+      <div className="hp-glow-r" />
 
-      {/* Purple center glow */}
-      <div className="center-glow" />
-
-      {/* Floating Icon-Only Nav (Top Center) */}
-      <nav className="float-icon-nav" aria-label="Main navigation">
-        <Link 
-          to="/" 
-          className={`float-nav-item${location.pathname === '/' ? ' active' : ''}${hoveredNav === 'HOME' ? ' is-hovered' : ''}`}
-          onMouseEnter={() => setHoveredNav('HOME')}
-          onMouseLeave={() => setHoveredNav(null)}
-        >
-          <HomeIcon size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className={`float-nav-label${hoveredNav === 'HOME' ? ' show' : ''}`}>HOME</span>
-        </Link>
-        <Link 
-          to="/about" 
-          className={`float-nav-item${location.pathname === '/about' ? ' active' : ''}${hoveredNav === 'ABOUT' ? ' is-hovered' : ''}`}
-          onMouseEnter={() => setHoveredNav('ABOUT')}
-          onMouseLeave={() => setHoveredNav(null)}
-        >
-          <User size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className={`float-nav-label${hoveredNav === 'ABOUT' ? ' show' : ''}`}>ABOUT</span>
-        </Link>
-        <Link 
-          to="/projects" 
-          className={`float-nav-item${location.pathname === '/projects' ? ' active' : ''}${hoveredNav === 'PROJECTS' ? ' is-hovered' : ''}`}
-          onMouseEnter={() => setHoveredNav('PROJECTS')}
-          onMouseLeave={() => setHoveredNav(null)}
-        >
-          <LayoutGrid size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className={`float-nav-label${hoveredNav === 'PROJECTS' ? ' show' : ''}`}>PROJECTS</span>
-        </Link>
-        <Link 
-          to="/skills" 
-          className={`float-nav-item${hoveredNav === 'SKILLS' ? ' is-hovered' : ''}`}
-          onMouseEnter={() => setHoveredNav('SKILLS')}
-          onMouseLeave={() => setHoveredNav(null)}
-        >
-          <Code2 size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className={`float-nav-label${hoveredNav === 'SKILLS' ? ' show' : ''}`}>SKILLS</span>
-        </Link>
-        <Link 
-          to="/contact" 
-          className={`float-nav-item${location.pathname === '/contact' ? ' active' : ''}${hoveredNav === 'CONTACT' ? ' is-hovered' : ''}`}
-          onMouseEnter={() => setHoveredNav('CONTACT')}
-          onMouseLeave={() => setHoveredNav(null)}
-        >
-          <Mail size={22} strokeWidth={1.5} className="float-nav-icon" />
-          <span className={`float-nav-label${hoveredNav === 'CONTACT' ? ' show' : ''}`}>CONTACT</span>
-        </Link>
+      {/* ════════════════════════════════════════════
+          LEFT VERTICAL SIDEBAR
+      ════════════════════════════════════════════ */}
+      <nav className="hp-sidebar" aria-label="Main navigation">
+        {NAV_ITEMS.map(item => (
+          <div key={item.id} style={{ position: 'relative' }}>
+            <Link
+              to={item.path}
+              className={`hp-sb-btn${activeNav === item.id ? ' active' : ''}`}
+              onMouseEnter={() => setHoveredNav(item.id)}
+              onMouseLeave={() => setHoveredNav(null)}
+              aria-label={item.label}
+            >
+              <item.icon size={20} strokeWidth={1.8} />
+              <span className="hp-sb-tip">{item.label}</span>
+            </Link>
+          </div>
+        ))}
+        <div className="hp-sb-line" />
       </nav>
 
-      {/* Social links stack (left side, stack, minimal, no borders) */}
-      <div className="socials-stack">
-        <a 
-          href="https://www.linkedin.com/in/agalya-g-96106337b" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="social-link"
-          aria-label="LinkedIn"
-        >
-          <Linkedin size={22} />
+      {/* ════════════════════════════════════════════
+          TOP-RIGHT SOCIAL ICONS BAR
+      ════════════════════════════════════════════ */}
+      <div className="hp-socials-bar" role="complementary" aria-label="Social links">
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="Instagram">
+          <Instagram size={17} strokeWidth={1.6} />
         </a>
-        <a 
-          href="https://github.com" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="social-link"
-          aria-label="GitHub"
-        >
-          <Github size={22} />
-        </a>
-        <Link 
-          to="/contact" 
-          className="social-link"
-          aria-label="Email"
-        >
-          <Mail size={22} />
+        <Link to="/contact" className="hp-soc-btn" aria-label="Email">
+          <Mail size={17} strokeWidth={1.6} />
         </Link>
+        <a href="https://www.linkedin.com/in/agalya-g-96106337b" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="LinkedIn">
+          <Linkedin size={17} strokeWidth={1.6} />
+        </a>
+        <Link to="/contact" className="hp-soc-btn" aria-label="Messages">
+          <MessageSquare size={17} strokeWidth={1.6} />
+        </Link>
+        <button className="hp-soc-btn" aria-label="Report" style={{ cursor: 'default' }}>
+          <Flag size={17} strokeWidth={1.6} />
+        </button>
+        <a href="/resume.pdf" download className="hp-cv-btn" aria-label="Download CV">
+          <FileText size={16} strokeWidth={1.8} />
+          CV
+        </a>
       </div>
 
-      {/* Hero content */}
-      <section className="glass-hero">
-        <h1 className="hero-name">AGALYA G</h1>
+      {/* ════════════════════════════════════════════
+          MAIN HERO — TWO COLUMN
+      ════════════════════════════════════════════ */}
+      <main className="hp-main" id="home">
 
-        {/* Cycling title — no box */}
-        <div className="title-plain-container">
-          <span key={titleIdx} className="title-plain-text">
-            {TITLES[titleIdx]}
-          </span>
+        {/* ── LEFT CONTENT BLOCK ── */}
+        <section className="hp-left" aria-label="Introduction">
+
+          {/* Hello World badge */}
+          <div className="hp-badge">&lt;Hello World/&gt;</div>
+
+          {/* Name heading */}
+          <h1 className="hp-name">
+            AGALYA <span className="teal">G</span>
+          </h1>
+
+          {/* Subtitle */}
+          <h2 className="hp-subtitle">Full Stack Developer</h2>
+
+          {/* Description box */}
+          <div className="hp-desc-box">
+            <p>
+              Designing high-performance, cinematic interactive digital
+              environments, scalable databases, and SaaS application portals.
+              Merging mathematical layout physics with state-of-the-art WebGL.
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="hp-stats" role="list" aria-label="Experience statistics">
+            <div role="listitem">
+              <div className="hp-stat-num">3+</div>
+              <div className="hp-stat-lbl">Years Exp.</div>
+            </div>
+            <div role="listitem">
+              <div className="hp-stat-num">20+</div>
+              <div className="hp-stat-lbl">Projects</div>
+            </div>
+            <div role="listitem">
+              <div className="hp-stat-num">100%</div>
+              <div className="hp-stat-lbl">Dedication</div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── RIGHT HUD FRAME ── */}
+        <div className="hp-right" aria-label="Profile image panel">
+          <div className="hud-frame">
+
+            {/* Ambient glow */}
+            <div className="hud-glow" />
+
+            {/* Profile image clipped to octagon */}
+            <div className="hud-profile-wrap">
+              <img src={profilePhoto} alt="Agalya G — Full Stack Developer" className="hud-profile-img" />
+            </div>
+
+            {/* Scrolling code overlay */}
+            <div className="hud-code-overlay" aria-hidden="true">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i}>{`const deploy = async () => {
+  await build({ env: 'prod' });
+  const res = await api.post('/deploy');
+  if (res.status === 200) notify('Live!');
+};
+function init(ctx) {
+  ctx.clearRect(0,0,W,H);
+  drawGrid(ctx, 16);
+}
+export default App;
+// stack: React · Node · WebGL
+const db = supabase.from('projects');
+let data = await db.select('*');
+return data.map(p => <Card key={p.id} {...p}/>);
+useEffect(() => { animate(frame); },[]);
+`}</div>
+              ))}
+            </div>
+
+            {/* Teal corner bracket SVGs */}
+            {['tl','tr','bl','br'].map(pos => (
+              <svg key={pos} className={`hud-corner ${pos}`} viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <polyline
+                  points="0,20 0,0 20,0"
+                  stroke="#2dd4bf"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  filter="url(#cglow)"
+                />
+                <defs>
+                  <filter id="cglow">
+                    <feGaussianBlur stdDeviation="1.5" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+              </svg>
+            ))}
+
+            {/* HUD main border */}
+            <div className="hud-border" />
+
+            {/* ── Floating HUD Widgets ── */}
+            <motion.div className="hud-widget hw-chart" animate={{ y: [0,-8,0] }} transition={{ duration: 4, repeat: Infinity, ease:'easeInOut' }}>
+              <div className="hw-title"><span className="hw-dot"/>Chart</div>
+              <svg width="70" height="28" viewBox="0 0 70 28" fill="none">
+                {[4,12,7,18,10,22,14,20,9,25].map((h,i)=>(
+                  <rect key={i} x={i*7} y={28-h} width="5" height={h} rx="1.5"
+                    fill={`rgba(45,212,191,${0.25+i*0.07})`}/>
+                ))}
+              </svg>
+            </motion.div>
+
+            <motion.div className="hud-widget hw-cursor" animate={{ y: [0,8,0] }} transition={{ duration: 3.7, repeat: Infinity, ease:'easeInOut', delay:0.4 }}>
+              <div className="hw-title"><span className="hw-dot" style={{background:'#f43f5e',boxShadow:'0 0 6px #f43f5e'}}/>Pointer</div>
+              <div style={{color:'#fff',fontSize:'11px'}}>x: 847<br/>y: 412</div>
+            </motion.div>
+
+            <motion.div className="hud-widget hw-drop" animate={{ y: [0,-7,0] }} transition={{ duration: 5.1, repeat: Infinity, ease:'easeInOut', delay:0.8 }}>
+              <div className="hw-title"><span className="hw-dot" style={{background:'#60a5fa',boxShadow:'0 0 6px #60a5fa'}}/>Droplet</div>
+              <div style={{color:'#fff',fontSize:'11px'}}>78%</div>
+            </motion.div>
+
+            <motion.div className="hud-widget hw-bell" animate={{ y: [0,6,0] }} transition={{ duration: 4.4, repeat: Infinity, ease:'easeInOut', delay:1.2 }}>
+              <div className="hw-title"><span className="hw-dot" style={{background:'#fbbf24',boxShadow:'0 0 6px #fbbf24'}}/>Alert</div>
+              <div style={{color:'#fff',fontSize:'11px'}}>3 new</div>
+            </motion.div>
+
+          </div>
         </div>
 
-        <p className="hero-tagline">
-          Designing high-performance, cinematic interactive digital environments,
-          scalable databases, and SaaS application portals. Merging mathematical
-          layout physics with state-of-the-art WebGL.
-        </p>
-
-        {/* GET IN TOUCH CTA Button */}
-        <Link to="/contact" className="cta-button">
-          GET IN TOUCH
-        </Link>
-      </section>
-
-
+      </main>
     </div>
   );
 };
