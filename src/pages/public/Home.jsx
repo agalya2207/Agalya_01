@@ -403,7 +403,7 @@ const Home = () => {
         }
 
         .hp-desc-box {
-          border: 1px solid rgba(45,212,191,0.25);
+          border: 1px solid rgba(45,212,191,0.35);
           border-radius: 12px;
           background: rgba(10,20,20,0.3);
           backdrop-filter: blur(8px);
