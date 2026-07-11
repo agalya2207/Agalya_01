@@ -12,7 +12,7 @@ import {
   FileText,
   Flag,
 } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import HeroVisual from '../../components/HeroVisual.jsx';
 
 /* ─── NAV items (used by left sidebar) ─── */
@@ -31,8 +31,6 @@ const CountUp = ({ end, duration = 2.0 }) => {
   useEffect(() => {
     let startTimestamp = null;
     const endNum = parseInt(end, 10);
-    const isPercent = end.includes('%');
-    const isPlus = end.includes('+');
 
     const step = (timestamp) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -63,18 +61,6 @@ const Home = () => {
   const canvasRef = useRef(null);
   const [hoveredNav, setHoveredNav] = useState(null);
 
-  // Motion values for tracking mouse move over the entire hero layout
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const handleGlobalMouseMove = (e) => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    // Normalize coordinates from -0.5 to 0.5
-    mouseX.set((e.clientX / width) - 0.5);
-    mouseY.set((e.clientY / height) - 0.5);
-  };
-
   /* ── Particle canvas + low opacity beams ── */
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,32 +75,32 @@ const Home = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    // 140 tiny teal dots drifting randomly
+    // 140 tiny teal dots drifting randomly (10-25% opacity)
     const NUM_DOTS = 140;
     const dots = Array.from({ length: NUM_DOTS }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      r: 0.6 + Math.random() * 1.0,
-      opacity: 0.1 + Math.random() * 0.1, // 10-20% opacity
+      r: 1 + Math.random() * 1.5,
+      opacity: 0.10 + Math.random() * 0.15,
       vx: (Math.random() - 0.5) * 0.15,
       vy: (Math.random() - 0.5) * 0.15,
     }));
 
-    // Thin diagonal light-beam lines (2-4% opacity) for depth
-    const NUM_BEAMS = 5;
+    // 3 very faint thin diagonal light lines (2-4% opacity)
+    const NUM_BEAMS = 3;
     const beams = Array.from({ length: NUM_BEAMS }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      len: 300 + Math.random() * 400,
-      angle: -35 + (Math.random() - 0.5) * 10, // diagonal
-      opacity: 0.02 + Math.random() * 0.02, // 2-4% opacity
-      speed: 0.05 + Math.random() * 0.05,
+      len: 400 + Math.random() * 400,
+      angle: -30 + (Math.random() - 0.5) * 8,
+      opacity: 0.02 + Math.random() * 0.02,
+      speed: 0.04 + Math.random() * 0.04,
     }));
 
     function animateLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw and drift beams
+      // Draw beams
       beams.forEach(b => {
         ctx.beginPath();
         const rad = (b.angle * Math.PI) / 180;
@@ -126,14 +112,13 @@ const Home = () => {
         ctx.lineTo(x2, y2);
         ctx.stroke();
 
-        // Slowly drift beams diagonally
         b.x += b.speed;
         b.y -= b.speed * 0.5;
         if (b.x > canvas.width) b.x = -b.len;
         if (b.y < -b.len) b.y = canvas.height;
       });
 
-      // Draw and drift dots
+      // Draw dots
       dots.forEach(d => {
         ctx.beginPath();
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
@@ -143,7 +128,6 @@ const Home = () => {
         d.x += d.vx;
         d.y += d.vy;
 
-        // Wrap around boundaries
         if (d.x < 0) d.x = canvas.width;
         if (d.x > canvas.width) d.x = 0;
         if (d.y < 0) d.y = canvas.height;
@@ -163,7 +147,6 @@ const Home = () => {
 
   const activeNav = NAV_ITEMS.find(n => n.path === location.pathname)?.id ?? 'home';
 
-  // Framer-motion transition configurations for staggered layout text elements
   const containerVariants = {
     hidden: {},
     visible: {
@@ -186,11 +169,8 @@ const Home = () => {
   };
 
   return (
-    <div className="hp-root" onMouseMove={handleGlobalMouseMove}>
+    <div className="hp-root">
       <style>{`
-        /* ═══════════════════════════════════════════
-           CSS VARIABLES & GLOBAL SPEC THEME
-        ═══════════════════════════════════════════ */
         :root {
           --bg-black:    #05080a;
           --teal-accent: #2dd4bf;
@@ -218,7 +198,7 @@ const Home = () => {
         }
 
         /* ═══════════════════════════════════════════
-           LEFT FLOATING SIDEBAR (rounded pill container)
+           LEFT FLOATING SIDEBAR
         ═══════════════════════════════════════════ */
         .hp-sidebar {
           position: fixed;
@@ -232,7 +212,7 @@ const Home = () => {
           gap: 12px;
           background: rgba(20,25,25,0.6);
           border: 1px solid rgba(45,212,191,0.1);
-          border-radius: 40px;
+          border-radius: 30px;
           padding: 24px 0 20px;
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
@@ -245,7 +225,7 @@ const Home = () => {
           border-radius: 50%;
           border: none;
           background: transparent;
-          color: #64748b;
+          color: #5a6a68;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -257,7 +237,6 @@ const Home = () => {
         
         .hp-sb-btn:hover {
           color: var(--teal-accent);
-          background: rgba(45,212,191,0.08);
         }
 
         /* Glowing circle behind active button */
@@ -296,7 +275,7 @@ const Home = () => {
 
         .hp-sb-line {
           width: 2px;
-          height: 40px;
+          height: 30px;
           background: var(--teal-accent);
           border-radius: 2px;
           margin-top: 8px;
@@ -322,11 +301,11 @@ const Home = () => {
         }
 
         .hp-soc-btn {
-          width: 40px;
-          height: 40px;
+          width: 32px;
+          height: 32px;
           border-radius: 8px;
-          background: rgba(20,25,25,0.6);
-          border: 1px solid rgba(45,212,191,0.1);
+          background: rgba(255,255,255,0.06);
+          border: none;
           color: #cbd5e1;
           display: flex;
           align-items: center;
@@ -334,19 +313,17 @@ const Home = () => {
           cursor: pointer;
           transition: all 0.25s ease;
           text-decoration: none;
-          backdrop-filter: blur(10px);
         }
         .hp-soc-btn:hover {
           color: var(--teal-accent);
-          border-color: rgba(45,212,191,0.45);
-          box-shadow: 0 0 12px rgba(45,212,191,0.15);
+          box-shadow: 0 0 10px rgba(45,212,191,0.2);
         }
 
         .hp-cv-btn {
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 8px 20px;
+          padding: 6px 18px;
           border-radius: 8px;
           background: transparent;
           border: 1px solid var(--teal-accent);
@@ -407,7 +384,7 @@ const Home = () => {
 
         .hp-name {
           font-family: 'Poppins', 'Inter', sans-serif;
-          font-size: clamp(48px, 7vw, 90px);
+          font-size: clamp(48px, 6vw, 80px);
           font-weight: 800;
           line-height: 1.0;
           letter-spacing: -0.03em;
@@ -426,9 +403,9 @@ const Home = () => {
         }
 
         .hp-desc-box {
-          border: 1px solid rgba(45,212,191,0.3);
+          border: 1px solid rgba(45,212,191,0.25);
           border-radius: 12px;
-          background: rgba(10,20,20,0.4);
+          background: rgba(10,20,20,0.3);
           backdrop-filter: blur(8px);
           padding: 24px;
           max-width: 540px;
@@ -448,7 +425,7 @@ const Home = () => {
         }
         .hp-stat-num {
           font-family: 'Poppins', 'Inter', sans-serif;
-          font-size: clamp(28px, 3.5vw, 42px);
+          font-size: 32px;
           font-weight: 800;
           color: #ffffff;
           line-height: 1;
@@ -456,17 +433,13 @@ const Home = () => {
         }
         .hp-stat-lbl {
           font-family: 'JetBrains Mono', monospace;
-          font-size: 10px;
+          font-size: 12px;
           font-weight: 600;
-          letter-spacing: 1.5px;
+          letter-spacing: 1px;
           text-transform: uppercase;
           color: var(--teal-accent);
         }
 
-        /* ═══════════════════════════════════════════
-           RESPONSIVE STYLE overrides
-           900px breakpoint: Visual top, text bottom
-        ═══════════════════════════════════════════ */
         @media (max-width: 900px) {
           .hp-main {
             grid-template-columns: 1fr;
@@ -640,7 +613,7 @@ const Home = () => {
 
         {/* Right side Visual container */}
         <div className="hp-right-wrap">
-          <HeroVisual mouseX={mouseX} mouseY={mouseY} />
+          <HeroVisual />
         </div>
       </main>
     </div>

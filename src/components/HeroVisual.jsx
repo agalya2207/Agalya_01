@@ -1,61 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { LineChart, MousePointer, Droplets, Bell } from 'lucide-react';
 import profilePhoto from '../assets/profile-photo.png';
 
-/* ── Matrix rain canvas hook ── */
-function useMatrixRain(canvasRef) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let raf;
-
-    const CHARS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ{}[]<>/\\|;:,.?!@#$%&*';
-    const FONT_SIZE = 10;
-    let cols, drops;
-
-    function init() {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      cols  = Math.floor(canvas.width / FONT_SIZE);
-      drops = Array.from({ length: cols }, () => Math.floor(Math.random() * -40));
-    }
-
-    function draw() {
-      ctx.fillStyle = 'rgba(5,15,12,0.18)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(45,212,191,0.55)';
-      ctx.font      = `${FONT_SIZE}px "JetBrains Mono", monospace`;
-
-      for (let i = 0; i < drops.length; i++) {
-        const char = CHARS[Math.floor(Math.random() * CHARS.length)];
-        ctx.fillText(char, i * FONT_SIZE, drops[i] * FONT_SIZE);
-        if (drops[i] * FONT_SIZE > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
-      raf = requestAnimationFrame(draw);
-    }
-
-    init();
-    draw();
-
-    const ro = new ResizeObserver(init);
-    ro.observe(canvas);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-    };
-  }, [canvasRef]);
-}
-
 const HeroVisual = () => {
-  const canvasRef = useRef(null);
-  useMatrixRain(canvasRef);
-
-  /* ── 3D tilt physics ── */
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const rotX = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), { damping: 25, stiffness: 150 });
@@ -66,80 +14,90 @@ const HeroVisual = () => {
     mx.set((e.clientX - r.left) / r.width - 0.5);
     my.set((e.clientY - r.top) / r.height - 0.5);
   };
-  const onLeave = () => { mx.set(0); my.set(0); };
+  const onLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
 
-  /* Unified octagon clip path polygon */
   const OCTAGON = 'polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%)';
 
   return (
     <>
       <style>{`
-        /* ──────────────────────────────────────────
-           SCENE ROOT
-        ────────────────────────────────────────── */
         .hv-scene {
           position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          perspective: 1100px;
+          perspective: 1200px;
           width: 100%;
           height: 100%;
+          padding-top: 48px;
         }
 
-        /* ──────────────────────────────────────────
-           HUD OUTER FRAME WRAPPER (tilts in 3D)
-        ────────────────────────────────────────── */
-        .hero-visual {
+        .hero-visual-container {
           position: relative;
-          width: 480px;
-          height: 620px;
+          width: 500px;
+          height: 600px;
           transform-style: preserve-3d;
-          cursor: default;
         }
 
-        /* Layer 1: Code-rain/hologram background layer (z-index 1) */
-        .hv-bg-panel {
+        /* ─── HUD FRAME WRAPPER ─── */
+        /* The drop-shadow filter is applied here so the glow radiates OUTSIDE
+           the clipped boundary — box-shadow on a clipped element gets cut off */
+        .hud-frame {
+          position: relative;
+          width: 500px;
+          height: 600px;
+          filter:
+            drop-shadow(0 0 8px rgba(45,212,191,0.55))
+            drop-shadow(0 0 20px rgba(45,212,191,0.3));
+        }
+
+        /* Every direct child shares the same octagon clip-path.
+           We also repeat it on each class so specificity never loses. */
+        .hud-frame > * {
           position: absolute;
           inset: 0;
-          background: rgba(5, 20, 20, 0.6);
-          clip-path: ${OCTAGON};
-          overflow: hidden;
+          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
+        }
+
+        /* ─── Layer 1: dark teal gradient fill ─── */
+        .hud-bg {
           z-index: 1;
+          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
+          background: radial-gradient(circle at 50% 25%, #0d2b27 0%, #030a09 100%);
         }
 
-        .hv-rain-canvas {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0.22;
-          display: block;
-        }
-
-        .hv-static-code {
-          position: absolute;
-          font-family: 'JetBrains Mono', 'Fira Code', monospace;
-          font-size: 8px;
-          color: rgba(45,212,191,0.25);
-          line-height: 1.5;
-          pointer-events: none;
-          white-space: pre;
-          user-select: none;
-        }
-        .hv-static-code.tl { top: 48px; left: 24px; }
-        .hv-static-code.br { bottom: 48px; right: 24px; text-align: right; }
-
-        /* Layer 2: The photo itself (z-index 2) */
-        .hv-photo-wrap {
-          position: absolute;
-          inset: 0;
+        /* ─── Layer 2: scanline + falling code rain ─── */
+        .hud-code-layer {
           z-index: 2;
-          clip-path: ${OCTAGON};
+          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
           overflow: hidden;
-          background: transparent;
         }
-        .hv-photo {
+        .hud-code-layer::before {
+          content: '';
+          position: absolute;
+          inset: -20%;
+          background-image: repeating-linear-gradient(
+            0deg,
+            rgba(45,212,191,0.15) 0px,
+            rgba(45,212,191,0.15) 1px,
+            transparent 1px,
+            transparent 16px
+          );
+          animation: codeFall 6s linear infinite;
+          transform: rotateX(15deg);
+        }
+        @keyframes codeFall {
+          from { transform: rotateX(15deg) translateY(-20%); }
+          to   { transform: rotateX(15deg) translateY(20%); }
+        }
+
+        /* ─── Layer 3: profile photo ─── */
+        .hud-photo {
+          z-index: 3;
+          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
           width: 100%;
           height: 100%;
           object-fit: cover;
@@ -147,102 +105,146 @@ const HeroVisual = () => {
           display: block;
         }
 
-        /* Layer 3: Glowing teal border frame (z-index 3) */
-        .hv-border-glow {
-          position: absolute;
-          inset: 0;
-          clip-path: ${OCTAGON};
-          border: 1.5px solid rgba(45, 212, 191, 0.8);
+        /* ─── Layer 4: octagon border outline ─── */
+        /* box-shadow is clipped by clip-path so we intentionally omit it here.
+           The glow comes from the drop-shadow on .hud-frame above. */
+        .hud-border {
+          z-index: 4;
+          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
+          border: 1.5px solid rgba(45, 212, 191, 0.85);
           background: transparent;
-          z-index: 3;
           pointer-events: none;
-          box-shadow: 0 0 12px rgba(45, 212, 191, 0.5), inset 0 0 20px rgba(45, 212, 191, 0.15);
         }
-
-        /* Corner brackets overlaying HUD corners */
-        .hv-corner {
+        .hud-rain-char {
           position: absolute;
-          z-index: 5;
+          font-family: 'JetBrains Mono', 'Fira Code', monospace;
+          color: #2dd4bf;
           pointer-events: none;
-          width: 42px;
-          height: 42px;
+          white-space: nowrap;
+          animation: matrixRain linear infinite;
+          transform-style: preserve-3d;
         }
-        .hv-corner svg { display: block; }
-
-        .hv-corner.tl { top: -1px;  left: -1px; }
-        .hv-corner.tr { top: -1px;  right: -1px; transform: scaleX(-1); }
-        .hv-corner.bl { bottom: -1px; left: -1px;  transform: scaleY(-1); }
-        .hv-corner.br { bottom: -1px; right: -1px;  transform: scale(-1,-1); }
-
-        .hv-corner.tl polyline,
-        .hv-corner.br polyline {
-          filter: drop-shadow(0 0 4px #2dd4bf);
-          animation: hv-bracket-pulse 2.5s ease-in-out infinite;
+        @keyframes matrixRain {
+          0% {
+            transform: translateY(-50px) scale(var(--rain-scale, 1));
+            opacity: 0;
+          }
+          10% {
+            opacity: var(--rain-opacity, 0.25);
+          }
+          90% {
+            opacity: var(--rain-opacity, 0.25);
+          }
+          100% {
+            transform: translateY(670px) scale(var(--rain-scale, 1));
+            opacity: 0;
+          }
         }
-        @keyframes hv-bracket-pulse {
-          0%,100% { opacity: 1; }
-          50%      { opacity: 0.55; }
-        }
 
-        .hv-ambient {
+
+
+        /* Floating HUD Widgets OUTSIDE the frame boundary */
+        .hv-floating-widget {
           position: absolute;
-          inset: -50px;
-          background: radial-gradient(circle, rgba(45,212,191,0.12) 0%, transparent 70%);
-          z-index: 0;
+          background: rgba(20, 30, 30, 0.55);
+          border: 1px solid rgba(45, 212, 191, 0.25);
+          border-radius: 8px;
+          padding: 8px 12px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          z-index: 10;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 9px;
+          color: #94a3b8;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.5);
           pointer-events: none;
+        }
+
+        /* Float Animations for HUD Widgets */
+        .w-float-1 { animation: float-anim-1 3.5s ease-in-out infinite alternate; }
+        .w-float-2 { animation: float-anim-2 4.2s ease-in-out infinite alternate; }
+        .w-float-3 { animation: float-anim-3 4.8s ease-in-out infinite alternate; }
+        .w-float-4 { animation: float-anim-4 3.9s ease-in-out infinite alternate; }
+
+        @keyframes float-anim-1 { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+        @keyframes float-anim-2 { 0% { transform: translateY(0); } 100% { transform: translateY(6px); } }
+        @keyframes float-anim-3 { 0% { transform: translateY(0); } 100% { transform: translateY(-6px); } }
+        @keyframes float-anim-4 { 0% { transform: translateY(0); } 100% { transform: translateY(8px); } }
+
+        .hv-glow-dot {
+          width: 5px;
+          height: 5px;
           border-radius: 50%;
+          background: #2dd4bf;
+          box-shadow: 0 0 6px #2dd4bf;
         }
 
         @media (max-width: 900px) {
-          .hero-visual { width: 340px; height: 440px; }
-        }
-        @media (max-width: 600px) {
-          .hero-visual { width: 280px; height: 360px; }
+          .hero-visual-container {
+            width: 320px;
+            height: 410px;
+          }
+          .hud-frame {
+            width: 320px;
+            height: 410px;
+          }
+          .hv-floating-widget {
+            display: none;
+          }
         }
       `}</style>
 
       <div className="hv-scene" onMouseMove={onMove} onMouseLeave={onLeave}>
-        <div className="hv-ambient" />
-
-        {/* 3D tiltable card with fixed aspect ratio */}
         <motion.div
-          className="hero-visual"
+          className="hero-visual-container"
           style={{ rotateX: rotX, rotateY: rotY, transformStyle: 'preserve-3d' }}
         >
-          {/* Layer 1: Code-rain/hologram background (z-index 1) */}
-          <div className="hv-bg-panel">
-            <canvas ref={canvasRef} className="hv-rain-canvas" />
-            <div className="hv-static-code tl">{`const app = new WebGL();\nctx.viewport(0,0,W,H);\ngl.enable(gl.DEPTH_TEST);`}</div>
-            <div className="hv-static-code br">{`db.from('users')\n  .select('*');\nreturn data;`}</div>
-          </div>
-
-          {/* Layer 2: Profile photo clipped into octagon (z-index 2) */}
-          <div className="hv-photo-wrap">
-            <img
-              src={profilePhoto}
-              alt="Agalya G — Full Stack Developer"
-              className="hv-photo"
-              draggable={false}
-            />
-          </div>
-
-          {/* Layer 3: Glowing teal border frame (z-index 3) */}
-          <div className="hv-border-glow" />
-
-          {/* Corner brackets */}
-          {['tl', 'tr', 'bl', 'br'].map(pos => (
-            <div key={pos} className={`hv-corner ${pos}`} aria-hidden="true">
-              <svg viewBox="0 0 42 42" width="42" height="42" fill="none">
-                <polyline
-                  points="0,24 0,0 24,0"
-                  stroke={pos === 'tl' || pos === 'br' ? '#2dd4bf' : 'rgba(45,212,191,0.35)'}
-                  strokeWidth={pos === 'tl' || pos === 'br' ? '2.5' : '1.5'}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+          <div className="hud-frame">
+            <div className="hud-bg" />
+            <div className="hud-code-layer">
+              <span className="hud-rain-char" style={{ left: '10%', fontSize: '11px', animationDuration: '5s', animationDelay: '0s', '--rain-scale': 0.8, '--rain-opacity': 0.2 }}>01001</span>
+              <span className="hud-rain-char" style={{ left: '25%', fontSize: '13px', animationDuration: '7s', animationDelay: '1.5s', '--rain-scale': 1.1, '--rain-opacity': 0.3 }}>{"{ x: 0 }"}</span>
+              <span className="hud-rain-char" style={{ left: '40%', fontSize: '10px', animationDuration: '4s', animationDelay: '0.8s', '--rain-scale': 0.7, '--rain-opacity': 0.2 }}>if(active)</span>
+              <span className="hud-rain-char" style={{ left: '55%', fontSize: '14px', animationDuration: '6s', animationDelay: '2.2s', '--rain-scale': 1.2, '--rain-opacity': 0.3 }}>0xFA39</span>
+              <span className="hud-rain-char" style={{ left: '70%', fontSize: '12px', animationDuration: '5.5s', animationDelay: '3s', '--rain-scale': 0.9, '--rain-opacity': 0.22 }}>const app</span>
+              <span className="hud-rain-char" style={{ left: '85%', fontSize: '12px', animationDuration: '4.5s', animationDelay: '0.5s', '--rain-scale': 1.0, '--rain-opacity': 0.25 }}>{"=> fn()"}</span>
+              <span className="hud-rain-char" style={{ left: '15%', fontSize: '9px', animationDuration: '8s', animationDelay: '4s', '--rain-scale': 0.65, '--rain-opacity': 0.2 }}>true</span>
+              <span className="hud-rain-char" style={{ left: '65%', fontSize: '13px', animationDuration: '6.5s', animationDelay: '1.1s', '--rain-scale': 1.15, '--rain-opacity': 0.28 }}>async</span>
             </div>
-          ))}
+            <img src={profilePhoto} className="hud-photo" alt="Agalya G" />
+            <div className="hud-border" />
+          </div>
+
+
+
+          {/* Floating HUD Widgets (OUTSIDE the frame) */}
+          <div className="hv-floating-widget w-float-1" style={{ top: '60px', left: '-110px', opacity: 0.8 }}>
+            <div className="hv-glow-dot" />
+            <LineChart size={12} color="#2dd4bf" />
+            <span>SYS OK</span>
+          </div>
+
+          <div className="hv-floating-widget w-float-2" style={{ top: '200px', right: '-110px', opacity: 0.75 }}>
+            <div className="hv-glow-dot" style={{ background: '#f43f5e', boxShadow: '0 0 6px #f43f5e' }} />
+            <MousePointer size={12} color="#f43f5e" />
+            <span>PTR: Active</span>
+          </div>
+
+          <div className="hv-floating-widget w-float-3" style={{ bottom: '180px', left: '-100px', opacity: 0.65 }}>
+            <div className="hv-glow-dot" style={{ background: '#60a5fa', boxShadow: '0 0 6px #60a5fa' }} />
+            <Droplets size={12} color="#60a5fa" />
+            <span>DB LOAD: 24%</span>
+          </div>
+
+          <div className="hv-floating-widget w-float-4" style={{ bottom: '80px', right: '-90px', opacity: 0.7 }}>
+            <div className="hv-glow-dot" style={{ background: '#fbbf24', boxShadow: '0 0 6px #fbbf24' }} />
+            <Bell size={12} color="#fbbf24" />
+            <span>SYS: Stable</span>
+          </div>
+
         </motion.div>
       </div>
     </>
