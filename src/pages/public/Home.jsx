@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { motion, useMotionValue } from 'framer-motion';
 import HeroVisual from '../../components/HeroVisual.jsx';
-import techBg from '../../assets/tech-bg.png';
 
 /* ─── NAV items (used by left sidebar) ─── */
 const NAV_ITEMS = [
@@ -62,7 +61,7 @@ const Home = () => {
   const canvasRef = useRef(null);
   const [hoveredNav, setHoveredNav] = useState(null);
 
-  /* ── Particle canvas + low opacity beams ── */
+  /* ── Premium particle canvas: dots + network connections + data beams ── */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -76,32 +75,35 @@ const Home = () => {
     window.addEventListener('resize', resize);
     resize();
 
-    // 140 tiny teal dots drifting randomly (10-25% opacity)
-    const NUM_DOTS = 140;
+    // 90 teal particles drifting slowly
+    const NUM_DOTS = 90;
     const dots = Array.from({ length: NUM_DOTS }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      r: 1 + Math.random() * 1.5,
-      opacity: 0.10 + Math.random() * 0.15,
-      vx: (Math.random() - 0.5) * 0.15,
-      vy: (Math.random() - 0.5) * 0.15,
+      r: 1 + Math.random() * 1.8,
+      opacity: 0.08 + Math.random() * 0.14,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: (Math.random() - 0.5) * 0.12,
     }));
 
-    // 3 very faint thin diagonal light lines (2-4% opacity)
+    // 3 faint diagonal data-flow beams
     const NUM_BEAMS = 3;
     const beams = Array.from({ length: NUM_BEAMS }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      len: 400 + Math.random() * 400,
-      angle: -30 + (Math.random() - 0.5) * 8,
-      opacity: 0.02 + Math.random() * 0.02,
-      speed: 0.04 + Math.random() * 0.04,
+      len: 350 + Math.random() * 350,
+      angle: -28 + (Math.random() - 0.5) * 8,
+      opacity: 0.018 + Math.random() * 0.018,
+      speed: 0.035 + Math.random() * 0.035,
     }));
+
+    // Connection threshold: draw lines between nearby dots
+    const CONNECTION_DIST = 130;
 
     function animateLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw beams
+      // Draw data-flow beams
       beams.forEach(b => {
         ctx.beginPath();
         const rad = (b.angle * Math.PI) / 180;
@@ -112,12 +114,29 @@ const Home = () => {
         ctx.moveTo(b.x, b.y);
         ctx.lineTo(x2, y2);
         ctx.stroke();
-
         b.x += b.speed;
         b.y -= b.speed * 0.5;
         if (b.x > canvas.width) b.x = -b.len;
         if (b.y < -b.len) b.y = canvas.height;
       });
+
+      // Draw neural network connections between close dots
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dx = dots[i].x - dots[j].x;
+          const dy = dots[i].y - dots[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECTION_DIST) {
+            const lineOpacity = (1 - dist / CONNECTION_DIST) * 0.07;
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = `rgba(45,212,191,${lineOpacity})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
 
       // Draw dots
       dots.forEach(d => {
@@ -125,10 +144,8 @@ const Home = () => {
         ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(45,212,191,${d.opacity})`;
         ctx.fill();
-
         d.x += d.vx;
         d.y += d.vy;
-
         if (d.x < 0) d.x = canvas.width;
         if (d.x > canvas.width) d.x = 0;
         if (d.y < 0) d.y = canvas.height;
@@ -184,12 +201,15 @@ const Home = () => {
           position: fixed;
           inset: 0;
           background: var(--bg-black);
-          background-image: 
-            linear-gradient(to right, rgba(5, 8, 10, 0.85) 0%, rgba(5, 8, 10, 0.45) 50%, rgba(5, 8, 10, 0.2) 100%),
-            url(${techBg});
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
+          /* Premium AI developer dark background: deep black with very subtle teal radial bloom */
+          background-image:
+            radial-gradient(ellipse 80% 60% at 65% 40%, rgba(13,43,39,0.38) 0%, transparent 70%),
+            radial-gradient(ellipse 50% 40% at 20% 70%, rgba(6,28,26,0.25) 0%, transparent 65%),
+            /* Subtle digital grid */
+            linear-gradient(rgba(45,212,191,0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45,212,191,0.025) 1px, transparent 1px);
+          background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+          background-position: 0 0, 0 0, center center, center center;
           color: var(--text-light);
           font-family: 'Poppins', 'Inter', sans-serif;
           overflow: hidden;
@@ -449,9 +469,11 @@ const Home = () => {
 
         @media (max-width: 900px) {
           .hp-root {
-            background-image: 
-              linear-gradient(to bottom, rgba(5, 8, 10, 0.4) 0%, rgba(5, 8, 10, 0.85) 60%, rgba(5, 8, 10, 0.95) 100%),
-              url(${techBg});
+            background-image:
+              radial-gradient(ellipse 100% 60% at 50% 30%, rgba(13,43,39,0.3) 0%, transparent 70%),
+              linear-gradient(rgba(45,212,191,0.02) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(45,212,191,0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 48px 48px, 48px 48px;
           }
           .hp-main {
             grid-template-columns: 1fr;
@@ -594,9 +616,9 @@ const Home = () => {
 
           <motion.div className="hp-desc-box" variants={itemVariants}>
             <p>
-              Designing high-performance, cinematic interactive digital environments,
-              scalable databases, and SaaS application portals. Merging mathematical layout
-              physics with state-of-the-art WebGL.
+              Building scalable, responsive, and modern web applications using React, Python,
+              and AI-driven technologies. Passionate about creating intuitive user experiences
+              and efficient digital solutions.
             </p>
           </motion.div>
 
