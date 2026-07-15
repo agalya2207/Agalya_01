@@ -28,33 +28,39 @@ const HeroVisual = () => {
   return (
     <>
       <style>{`
-        /* ─── Scene wrapper ─── */
+        /* ─── Scene wrapper: anchors to bottom so photo grows upward ─── */
         .hv-scene {
           position: relative;
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           justify-content: center;
           perspective: 1200px;
           width: 100%;
           height: 100%;
-          padding-top: 48px;
+          padding-top: 0;
         }
 
         /* ─── Outer 3-D tilt container ─── */
         .hero-visual-container {
           position: relative;
-          width: 420px;
-          height: 540px;
+          /* Explicit width prevents the absolute photo-wrap from collapsing to 0 */
+          width: 520px;
+          height: 90vh;
+          max-height: 720px;
           transform-style: preserve-3d;
-        }
-
-        /* ─── Photo wrapper: fills the container, no background, no border ─── */
-        .hud-photo-wrap {
-          position: absolute;
-          inset: 0;
           display: flex;
           align-items: flex-end;
           justify-content: center;
+        }
+
+        /* ─── Photo wrapper: in normal flow, centred at bottom ─── */
+        .hud-photo-wrap {
+          position: relative;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
           background: transparent;
           border: none;
           /* Gentle float */
@@ -65,22 +71,20 @@ const HeroVisual = () => {
           50%       { transform: translateY(-3px); }
         }
 
-        /* ─── Profile photo ─── */
+        /* ─── Profile photo: fills full container height, proportional width ─── */
         .hud-photo {
-          position: relative;
-          width: 87%;
-          height: auto;
-          max-height: 95%;
+          display: block;
+          height: 100%;
+          width: auto;
+          max-width: 100%;
           object-fit: contain;
           object-position: center bottom;
-          display: block;
-          margin-top: -18px;
-          margin-bottom: 0;
-          /* Cyan rim light only — no background tint */
+          margin: 0;
+          /* Cyan rim light — scales with photo */
           filter:
-            drop-shadow(0 0 8px rgba(45, 212, 191, 0.55))
-            drop-shadow(0 0 18px rgba(45, 212, 191, 0.25))
-            drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+            drop-shadow(0 0 10px rgba(45, 212, 191, 0.55))
+            drop-shadow(0 0 22px rgba(45, 212, 191, 0.25))
+            drop-shadow(0 16px 32px rgba(0, 0, 0, 0.6));
         }
 
         /* ─── Icon-only widget tiles ─── */
@@ -112,7 +116,8 @@ const HeroVisual = () => {
         @keyframes float-anim-4 { 0% { transform: translateY(0); } 100% { transform: translateY(7px); } }
 
         @media (max-width: 900px) {
-          .hero-visual-container { width: 280px; height: 360px; }
+          .hv-scene              { align-items: center; }
+          .hero-visual-container { width: 300px; height: 55vh; max-height: 420px; }
           .hv-icon-tile          { display: none; }
         }
       `}</style>
