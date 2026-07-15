@@ -50,35 +50,34 @@ const HeroVisual = () => {
         }
 
         /* ─── HUD FRAME WRAPPER ─── */
-        /* drop-shadow here so glow bleeds OUTSIDE the clipped boundary */
         .hud-frame {
           position: relative;
           width: 420px;
           height: 540px;
           overflow: hidden;
+          border-radius: 20px;
+          border: 1.5px solid rgba(45, 212, 191, 0.45);
+          box-shadow: 0 0 25px rgba(45, 212, 191, 0.25);
           filter:
-            drop-shadow(0 0 5px rgba(45,212,191,0.45))
-            drop-shadow(0 0 16px rgba(45,212,191,0.22));
+            drop-shadow(0 0 5px rgba(45,212,191,0.3))
+            drop-shadow(0 0 16px rgba(45,212,191,0.15));
         }
 
-        /* All inner layers: same absolute fill + same octagon clip */
+        /* All inner layers: same absolute fill */
         .hud-frame > * {
           position: absolute;
           inset: 0;
-          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
         }
 
         /* ─── Layer 1: dark teal gradient ─── */
         .hud-bg {
           z-index: 1;
-          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
           background: radial-gradient(circle at 50% 25%, #0d2b27 0%, #030a09 100%);
         }
 
         /* ─── Layer 2: scanline behind the person ─── */
         .hud-code-layer {
           z-index: 2;
-          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
           overflow: hidden;
         }
         .hud-code-layer::before {
@@ -101,36 +100,34 @@ const HeroVisual = () => {
         }
 
         /* ─── Layer 3: portrait photo ─── */
-        /* NO transform:scale — scale causes the img to render outside the
-           clip boundary. Use object-position only for crop control. */
         .hud-photo {
           z-index: 3;
-          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
           overflow: hidden;
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center 10%;
           display: block;
+          filter: drop-shadow(0 0 12px rgba(45, 212, 191, 0.35));
         }
 
         /* ─── Layer 4: thin uniform border ─── */
         .hud-border {
           z-index: 4;
-          clip-path: polygon(8% 0%, 92% 0%, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0% 92%, 0% 8%);
+          border-radius: 18px;
           border: 1px solid rgba(45,212,191,0.4);
           background: transparent;
           pointer-events: none;
         }
 
         /* ─── Corner accent brackets (TL + BR only) ─── */
-        /* These sit OUTSIDE the hud-frame, inside hero-visual-container */
         .hud-corner {
           position: absolute;
           width: 28px;
           height: 28px;
           pointer-events: none;
           z-index: 20;
+          display: none; /* Hide corner brackets to match reference format */
         }
         .hud-corner svg line {
           stroke: rgba(45,212,191,0.9);

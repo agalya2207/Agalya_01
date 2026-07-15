@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { motion, useMotionValue } from 'framer-motion';
 import HeroVisual from '../../components/HeroVisual.jsx';
+import techBg from '../../assets/tech-bg.png';
 
 /* ─── NAV items (used by left sidebar) ─── */
 const NAV_ITEMS = [
@@ -183,6 +184,12 @@ const Home = () => {
           position: fixed;
           inset: 0;
           background: var(--bg-black);
+          background-image: 
+            linear-gradient(to right, rgba(5, 8, 10, 0.85) 0%, rgba(5, 8, 10, 0.45) 50%, rgba(5, 8, 10, 0.2) 100%),
+            url(${techBg});
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
           color: var(--text-light);
           font-family: 'Poppins', 'Inter', sans-serif;
           overflow: hidden;
@@ -441,6 +448,11 @@ const Home = () => {
         }
 
         @media (max-width: 900px) {
+          .hp-root {
+            background-image: 
+              linear-gradient(to bottom, rgba(5, 8, 10, 0.4) 0%, rgba(5, 8, 10, 0.85) 60%, rgba(5, 8, 10, 0.95) 100%),
+              url(${techBg});
+          }
           .hp-main {
             grid-template-columns: 1fr;
             grid-template-rows: auto auto;
