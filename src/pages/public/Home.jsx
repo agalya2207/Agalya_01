@@ -378,10 +378,19 @@ const Home = () => {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 60px;
-          align-items: center;
+          align-items: stretch;
           padding: 0 10% 0 160px;
           height: 100vh;
           width: 100%;
+        }
+
+        /* Right visual column: full height so photo can anchor to bottom */
+        .hp-right-wrap {
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          height: 100%;
+          overflow: visible;
         }
 
         /* ═══════════════════════════════════════════
@@ -496,6 +505,7 @@ const Home = () => {
             align-items: center;
             order: 1;
             width: 100%;
+            height: auto;
           }
           .hp-desc-box {
             margin: 0 auto;
