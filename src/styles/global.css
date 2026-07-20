@@ -22,7 +22,7 @@
   --color-primary-glow: hsla(258, 90%, 66%, 0.3);
   --color-secondary: hsl(192, 95%, 47%);
   --color-secondary-glow: hsla(192, 95%, 47%, 0.3);
-  --color-accent: hsl(325, 90%, 60%);
+  --accent: #2DD9C4;
   
   --color-text: hsl(210, 20%, 98%);
   --color-text-muted: hsl(215, 15%, 72%);

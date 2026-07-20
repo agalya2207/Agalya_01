@@ -358,42 +358,28 @@ const About = () => {
           viewport={{ once: true, amount: 0.2 }}
         >
           <h1 className="about-hero-title">
-            Crafting <span className="accent-underlined">[digital]</span> experiences that inspire.
+            Design with <span className="accent-underlined">[intent]</span>.
           </h1>
 
           <div className="about-bio-card">
             <p>
-              Hey, I'm <span className="highlight-text">Agalya</span> — a B.Tech AI & Data Science student
-              (maintaining a <span className="highlight-text">9.12 CGPA</span>) and passionate <span className="highlight-text">Full Stack Developer</span> focused
-              on software architecture, API design, database modeling, and modern UI development. Working with React, Python, JavaScript, and SQL, I build performant, maintainable platforms designed for real-world reliability, not just classroom demos.
+              Hello, I'm <span className="highlight-text">Agalya</span> — an <span className="highlight-text">AI & Data Science</span> student at <span className="highlight-text">St. Joseph's College of Engineering</span> (CGPA: <span className="highlight-text">8.71</span>), passionate about building scalable web applications with clean code and thoughtful design.
             </p>
           </div>
 
           {/* Stats Grid */}
           <div className="about-stats-grid">
             <div className="stat-card">
-              <div className="stat-number">
-                <CountUp end="3+" />
-              </div>
-              <div className="stat-label">Years Exp</div>
+              <div className="stat-number"><CountUp end="2+" /></div>
+              <div className="stat-label">Years Experience</div>
             </div>
             <div className="stat-card">
-              <div className="stat-number">
-                <CountUp end="19+" />
-              </div>
-              <div className="stat-label">Clients</div>
+              <div className="stat-number"><CountUp end="5+" /></div>
+              <div className="stat-label">Projects Completed</div>
             </div>
             <div className="stat-card">
-              <div className="stat-number">
-                <CountUp end="23+" />
-              </div>
-              <div className="stat-label">Projects</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-number">
-                <CountUp end="8+" />
-              </div>
-              <div className="stat-label">Awards</div>
+              <div className="stat-number"><CountUp end="10+" /></div>
+              <div className="stat-label">Technologies</div>
             </div>
           </div>
 
@@ -467,9 +453,9 @@ const About = () => {
 const CSS_STYLES = `
   /* About Layout Design Tokens */
   :root {
-    --accent-color: #ff5e36;
-    --accent-glow: rgba(255, 94, 54, 0.4);
-    --accent-shadow: rgba(255, 94, 54, 0.15);
+    --accent: #2DD9C4;
+    --accent-glow: rgba(45, 217, 196, 0.4);
+    --accent-shadow: rgba(45, 217, 196, 0.15);
   }
 
   .about-wrapper {
@@ -511,17 +497,17 @@ const CSS_STYLES = `
   }
 
   .accent-underlined {
-    color: var(--accent-color);
+    color: var(--accent);
     position: relative;
     text-decoration: underline;
     text-underline-offset: 8px;
-    text-decoration-color: var(--accent-color);
+    text-decoration-color: var(--accent);
     text-decoration-thickness: 3px;
     text-shadow: 0 0 15px var(--accent-glow);
   }
 
   .about-bio-card {
-    border-left: 4px solid var(--accent-color);
+    border-left: 4px solid var(--accent);
     padding-left: 20px;
     margin: 8px 0;
   }
@@ -534,18 +520,18 @@ const CSS_STYLES = `
   }
 
   .highlight-text {
-    color: var(--accent-color);
+    color: var(--accent);
     font-weight: 600;
     text-shadow: 0 0 10px var(--accent-shadow);
   }
 
   /* Stats cards design */
-  .about-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-top: 12px;
-  }
+   .about-stats-grid {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 16px;
+     margin-top: 12px;
+   }
 
   .stat-card {
     background: rgba(255, 255, 255, 0.02);
@@ -561,16 +547,16 @@ const CSS_STYLES = `
 
   .stat-card:hover {
     transform: translateY(-4px);
-    background: rgba(255, 94, 54, 0.03);
-    border-color: rgba(255, 94, 54, 0.25);
-    box-shadow: 0 12px 35px rgba(255, 94, 54, 0.08);
+    background: rgba(45, 217, 196, 0.03);
+    border-color: rgba(45, 217, 196, 0.25);
+    box-shadow: 0 12px 35px rgba(45, 217, 196, 0.08);
   }
 
   .stat-number {
     font-family: var(--font-heading), 'Poppins', sans-serif;
     font-size: 2.2rem;
     font-weight: 800;
-    color: var(--accent-color);
+    color: var(--accent);
     line-height: 1;
     margin-bottom: 6px;
     text-shadow: 0 0 12px var(--accent-glow);
@@ -588,7 +574,7 @@ const CSS_STYLES = `
     font-family: 'Poppins', sans-serif;
     font-size: 0.75rem;
     font-weight: 800;
-    color: var(--accent-color);
+    color: var(--accent);
     letter-spacing: 0.3em;
     text-transform: uppercase;
     margin-top: 8px;
@@ -654,7 +640,7 @@ const CSS_STYLES = `
   }
 
   .tab-pill-btn.active {
-    background: var(--accent-color);
+    background: var(--accent);
     color: #ffffff;
     box-shadow: 0 4px 15px var(--accent-shadow);
   }
@@ -696,27 +682,27 @@ const CSS_STYLES = `
     display: inline-flex;
   }
 
-  .tech-icon-btn {
-    width: 54px;
-    height: 54px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #E5E5E5; /* Soft white/gray muted tone by default */
-    cursor: pointer;
-    transition: var(--transition-spring);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
+   .tech-icon-btn {
+     width: 54px;
+     height: 54px;
+     border-radius: 12px;
+     background: rgba(255, 255, 255, 0.03);
+     border: 1px solid rgba(255, 255, 255, 0.08);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: rgba(255, 255, 255, 0.6); /* Subtle gray/default */
+     cursor: pointer;
+     transition: var(--transition-spring);
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+   }
 
   .tech-icon-btn:hover {
-    color: var(--accent-color); /* transitions the icon color to the site's accent orange/red */
-    border-color: var(--accent-color); /* border glow in same accent color */
-    transform: scale(1.08) translateY(-2px); /* subtle scale-up */
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: scale(1.08) translateY(-2px);
     box-shadow: 0 0 15px var(--accent-glow);
-    background: rgba(255, 255, 255, 0.03); /* Keep existing dark background, do NOT change background */
+    background: rgba(255, 255, 255, 0.03);
   }
 
   /* Ensure all SVGs inherit parent color fill and stroke values dynamically */
@@ -731,7 +717,7 @@ const CSS_STYLES = `
     left: 50%;
     transform: translateX(-50%) translateY(4px);
     background: rgba(12, 8, 24, 0.96);
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--accent);
     color: #ffffff;
     padding: 5px 10px;
     border-radius: 6px;
@@ -752,7 +738,7 @@ const CSS_STYLES = `
     left: 50%;
     transform: translateX(-50%);
     border: 5px solid transparent;
-    border-top-color: var(--accent-color);
+    border-top-color: var(--accent);
   }
 
   .tech-icon-wrapper:hover .tech-icon-tooltip {

@@ -434,10 +434,10 @@ const CSS = `
   .sm-card-head { display:flex; align-items:center; gap:6px; }
   .sm-icon-box {
     width:26px; height:26px; border-radius:6px; background:rgba(168,85,247,0.14);
-    display:flex; align-items:center; justify-content:center; color:#C084FC;
+    display:flex; align-items:center; justify-content:center; color:var(--color-surface-solid);
     transition:all 0.4s ease; flex-shrink:0;
   }
-  .sm-card:hover .sm-icon-box { background:rgba(168,85,247,0.25); box-shadow:0 0 10px rgba(192,132,252,0.5); transform:scale(1.1) rotate(5deg); }
+  .sm-card:hover .sm-icon-box { background:rgba(168,85,247,0.25); box-shadow:0 0 10px rgba(192,132,252,0.5); transform:scale(1.1) rotate(5deg); color:var(--color-surface); }
   .sm-card-title { font-family:'Inter',sans-serif; font-size:0.88rem; font-weight:600; color:#fff; margin:0; line-height:1.2; }
   .sm-card-desc { font-size:0.68rem; color:rgba(255,255,255,0.62); line-height:1.25; margin:0; }
   .sm-tags { display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; }
@@ -543,6 +543,12 @@ const CSS = `
     box-shadow:0 0 14px rgba(168,85,247,0.3), inset 0 0 8px rgba(168,85,247,0.08);
     display:flex; align-items:center; justify-content:center;
     transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  .sm-orbit-disc svg {
+    fill:var(--color-surface-solid); stroke:var(--color-surface-solid); transition:fill 0.3s, stroke 0.3s;
+  }
+  .sm-orbit-node.is-active .sm-orbit-disc svg {
+    fill:var(--color-surface); stroke:var(--color-surface);
   }
 
   /* Active state (hovered / tapped) */
