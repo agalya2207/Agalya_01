@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Home as HomeIcon,
   User,
-  LayoutGrid,
   BarChart2,
   MessageSquare,
   Instagram,
@@ -19,7 +18,6 @@ import HeroVisual from '../../components/HeroVisual.jsx';
 const NAV_ITEMS = [
   { id: 'home',     path: '/',         icon: HomeIcon,      label: 'Home' },
   { id: 'about',    path: '/about',    icon: User,          label: 'About' },
-  { id: 'skills',   path: '/skills',   icon: LayoutGrid,    label: 'Skills' },
   { id: 'projects', path: '/projects', icon: BarChart2,     label: 'Projects' },
   { id: 'contact',  path: '/contact',  icon: MessageSquare, label: 'Contact' },
 ];
@@ -633,26 +631,28 @@ const Home = () => {
           </motion.div>
 
           {/* Stats count-up blocks */}
-          <motion.div className="hp-stats" role="list" aria-label="Experience statistics" variants={itemVariants}>
-            <div role="listitem">
-              <div className="hp-stat-num">
-                <CountUp end="3+" />
-              </div>
-              <div className="hp-stat-lbl">Years Exp.</div>
-            </div>
-            <div role="listitem">
-              <div className="hp-stat-num">
-                <CountUp end="20+" />
-              </div>
-              <div className="hp-stat-lbl">Projects</div>
-            </div>
-            <div role="listitem">
-              <div className="hp-stat-num">
-                <CountUp end="100%" />
-              </div>
-              <div className="hp-stat-lbl">Dedication</div>
-            </div>
-          </motion.div>
+          {/* Stats count-up blocks */}
+<motion.div className="hp-stats" role="list" aria-label="Experience statistics" variants={itemVariants}>
+  <div role="listitem">
+    <div className="hp-stat-num">
+      <CountUp end="10+" />
+    </div>
+    <div className="hp-stat-lbl">Technologies</div>
+  </div>
+  <div role="listitem">
+    <div className="hp-stat-num">
+      <CountUp end="5+" />
+    </div>
+    <div className="hp-stat-lbl">Projects</div>
+  </div>
+  <div role="listitem">
+    <div className="hp-stat-num">
+      <CountUp end="100%" />
+    </div>
+    <div className="hp-stat-lbl">Dedication</div>
+  </div>
+</motion.div>
+    
         </motion.section>
 
         {/* Right side Visual container */}

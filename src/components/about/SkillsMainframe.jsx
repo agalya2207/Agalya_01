@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Code2, Database, Layers, Shield, Rocket, Brain } from 'lucide-react';
+import { SiHtml5, SiJavascript, SiTypescript, SiReact, SiVite, SiFigma, SiNodedotjs, SiPython, SiSupabase, SiPostgresql, SiJsonwebtokens, SiGithub, SiGit, SiPandas, SiNumpy, SiVercel } from 'react-icons/si';
+import { FaCss3 } from 'react-icons/fa';
+import { MdDevices, MdApi } from 'react-icons/md';
+import { BsGrid1X2 } from 'react-icons/bs';
+import { FaRobot, FaMagic } from 'react-icons/fa';
+import { VscCode } from 'react-icons/vsc';
 
 /* ─────────────────────────────────────────
    LEFT CARDS DATA (unchanged)
@@ -11,6 +17,60 @@ const SKILLS_DATA = [
   { title: 'Security & Data Protection', description: 'Implementing secure authentication, row-level security policies, access controls, and environment-based configuration.', tags: ['RLS Policies', 'Auth Guards', 'Access Control', 'Env Config'], icon: Shield },
   { title: 'Deployment & Tools', description: 'Managing production deployments, version control workflows, and modern development pipelines.', tags: ['Vercel', 'Git', 'GitHub'], icon: Rocket },
   { title: 'AI-Powered Development', description: 'Python automation, data workflows, and leveraging AI tools for rapid prototyping, debugging, and architecture planning.', tags: ['Python', 'Pandas', 'NumPy', 'Claude', 'DeepSeek', 'Antigravity IDE'], icon: Brain }
+];
+
+const SKILL_CATEGORIES = [
+  {
+    name: 'WEB DEVELOPMENT',
+    items: [
+      { icon: SiHtml5, label: 'HTML5' },
+      { icon: FaCss3, label: 'CSS3' },
+      { icon: SiJavascript, label: 'JavaScript' },
+      { icon: SiTypescript, label: 'TypeScript' },
+      { icon: SiReact, label: 'React' },
+      { icon: SiVite, label: 'Vite' },
+    ],
+  },
+  {
+    name: 'UI / UX DESIGN',
+    items: [
+      { icon: SiFigma, label: 'Figma' },
+      { icon: MdDevices, label: 'Responsive Design' },
+      { icon: BsGrid1X2, label: 'Component UI' },
+    ],
+  },
+  {
+    name: 'BACKEND & DATABASE',
+    items: [
+      { icon: SiNodedotjs, label: 'Node.js' },
+      { icon: SiPython, label: 'Python' },
+      { icon: SiSupabase, label: 'Supabase' },
+      { icon: SiPostgresql, label: 'PostgreSQL' },
+    ],
+  },
+  {
+    name: 'API & ARCHITECTURE',
+    items: [
+      { icon: MdApi, label: 'REST API' },
+      { icon: SiJsonwebtokens, label: 'Auth (JWT)' },
+      { icon: SiGithub, label: 'GitHub' },
+      { icon: SiGit, label: 'Git' },
+    ],
+  },
+  {
+    name: 'AI-POWERED DEVELOPMENT',
+    items: [
+      { icon: FaRobot, label: 'AI Automation' },
+      { icon: FaMagic, label: 'Magic' },
+    ],
+  },
+  {
+    name: 'DEPLOYMENT & TOOLS',
+    items: [
+      { icon: SiVercel, label: 'Vercel' },
+      { icon: VscCode, label: 'VS Code' },
+    ],
+  },
 ];
 
 /* ─────────────────────────────────────────
@@ -307,7 +367,7 @@ const SkillsMainframe = () => {
 
       <div className="sm-cols">
         {/* LEFT: Cards */}
-        <div className="sm-grid">
+        <div className="sm-grid hidden">
           {SKILLS_DATA.map((skill, i) => {
             const Icon = skill.icon;
             return (
@@ -325,64 +385,23 @@ const SkillsMainframe = () => {
           })}
         </div>
 
-        {/* RIGHT: Holographic Cloud Matrix */}
-        <div className="sm-matrix">
-
-          <div className="sm-topbar">
-            <span className="sm-bar-label sm-blink">[ SKILLS_MATRIX : ACTIVE ]</span>
-            <span className="sm-bar-label">HOLO_PROJECTION</span>
-          </div>
-
-          <div className="sm-stage" onClick={deactivate}>
-            <canvas ref={canvasRef} className="sm-canvas" />
-
-            {/* Concentric ring traces */}
-            {RINGS.map((ring, i) => (
-              <div key={i} className="sm-ring-trace" style={{
-                width:  `${ring.radius * 200}%`,
-                height: `${ring.radius * 200}%`,
-              }} />
-            ))}
-
-            {/* Center "Skills Core" node */}
-            <div className="sm-orbit-center">
-              <div className="sm-orbit-center-pulse" />
-              <div className="sm-orbit-center-disc">
-                <svg viewBox="0 0 28 28" width="22" height="22"><path d="M14 2l3 6 6.5 1-4.7 4.6 1.1 6.5L14 17l-5.9 3.1 1.1-6.5L4.5 9l6.5-1L14 2z" fill="#C084FC" opacity="0.9"/></svg>
+        {/* RIGHT: Static Skill Categories Grid */}
+        <div className="sm-categories">
+          {SKILL_CATEGORIES.map((category, catIdx) => (
+            <div key={catIdx} className="sm-category">
+              <h3 className="sm-category-label">{category.name}</h3>
+              <div className="sm-icons">
+                {category.items.map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <button key={i} className="icon-badge" title={item.label}>
+                      <Icon size={24} strokeWidth={1.5} />
+                    </button>
+                  );
+                })}
               </div>
-              <span className="sm-orbit-center-label">SKILLS CORE</span>
             </div>
-
-            {/* Orbiting tech icons */}
-            {ORBIT_NODES.map((node, i) => {
-              const tech = TECH_CLOUD[node.techIdx];
-              const isActive = activeOrbit === i;
-              return (
-                <div
-                  key={tech.name}
-                  ref={el => orbitElsRef.current[i] = el}
-                  className={`sm-orbit-node${isActive ? ' is-active' : ''}`}
-                  onClick={e => handleTap(e, i)}
-                  onTouchStart={e => handleTouch(e, i)}
-                  onMouseEnter={() => activate(i)}
-                  onMouseLeave={deactivate}
-                >
-                  <div className="sm-orbit-ring" />
-                  <div className="sm-orbit-disc">
-                    <tech.Icon />
-                  </div>
-                  {isActive && (
-                    <div className="sm-orbit-label">
-                      <b>{tech.name}</b>
-                      <span>{tech.level}</span>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="sm-footer">INTERACTIVE TECHNOLOGY CLOUD</div>
+          ))}
         </div>
       </div>
     </section>
@@ -449,7 +468,56 @@ const CSS = `
   .sm-tag:hover { background:rgba(168,85,247,0.2); border-color:#22D3EE; color:#22D3EE; box-shadow:0 0 8px rgba(34,211,238,0.4); transform:translateY(-1px); }
 
   /* RIGHT Matrix panel */
-  .sm-matrix {
+    .sm-categories {
+    flex:0 0 42%;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    overflow:auto;
+    padding:12px;
+    background:rgba(4,8,18,0.7);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border:1px solid rgba(168,85,247,0.22);
+    border-radius:16px;
+    box-shadow:inset 0 0 60px rgba(168,85,247,0.07),0 0 40px rgba(0,0,0,0.6);
+  }
+  .sm-category {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .sm-category-label {
+    font-family:'Inter',sans-serif;
+    font-size:0.78rem;
+    color:#fff;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin:0;
+  }
+  .sm-icons {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .icon-badge {
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(168,85,247,0.14);
+    border-radius:8px;
+    color:var(--color-surface-solid);
+    transition:all 0.3s ease;
+    border:1px solid rgba(168,85,247,0.28);
+  }
+  .icon-badge:hover {
+    background:rgba(168,85,247,0.25);
+    border-color:#22D3EE;
+    color:var(--color-surface);
+    transform:scale(1.1);
+  }
     flex:0 0 42%; background:rgba(4,8,18,0.7); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     border:1px solid rgba(168,85,247,0.22); border-radius:16px;
     box-shadow:inset 0 0 60px rgba(168,85,247,0.07),0 0 40px rgba(0,0,0,0.6);

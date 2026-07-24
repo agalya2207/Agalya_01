@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home as HomeIcon,
   User,
-  LayoutGrid,
   BarChart2,
   MessageSquare
 } from 'lucide-react';
@@ -11,7 +10,6 @@ import {
 const NAV_ITEMS = [
   { id: 'home',     hash: '#home',     path: '/',         icon: HomeIcon,      label: 'Home' },
   { id: 'about',    hash: '#about',    path: '/about',    icon: User,          label: 'About' },
-  { id: 'skills',   hash: '#skills',   path: '/skills',   icon: LayoutGrid,    label: 'Skills' },
   { id: 'projects', hash: '#projects', path: '/projects', icon: BarChart2,     label: 'Projects' },
   { id: 'contact',  hash: '#contact',  path: '/contact',  icon: MessageSquare, label: 'Contact' },
 ];

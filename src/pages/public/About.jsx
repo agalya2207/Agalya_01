@@ -459,13 +459,14 @@ const CSS_STYLES = `
   }
 
   .about-wrapper {
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 80vh;
-    box-sizing: border-box;
-  }
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 80vh;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
 
   /* Grid System styling */
   .about-grid-container {
@@ -788,6 +789,9 @@ const CSS_STYLES = `
       grid-template-columns: 1fr;
       gap: 40px;
     }
+    .skills-mainframe-panel {
+      max-width: 100%;
+    }
     .about-hero-title {
       font-size: 2.5rem;
     }
@@ -799,6 +803,8 @@ const CSS_STYLES = `
     }
     .skills-mainframe-panel {
       padding: 24px;
+      width: 100%;
+      max-width: 500px; /* Limit width on large screens */
     }
   }
 

@@ -1,6 +1,7 @@
 import { useMotionValue, useSpring, useTransform, motion } from 'framer-motion';
 import { BarChart2, MousePointer, Droplets, Bell, Activity, Zap } from 'lucide-react';
-import profilePhoto from '../assets/profile-photo.png';
+import profilePhoto from '../assets/image.png';
+
 
 const HeroVisual = () => {
   const mx = useMotionValue(0);
