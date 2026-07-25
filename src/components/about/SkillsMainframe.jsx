@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Code2, Database, Layers, Shield, Rocket, Brain } from 'lucide-react';
-import { SiHtml5, SiJavascript, SiTypescript, SiReact, SiVite, SiFigma, SiNodedotjs, SiPython, SiSupabase, SiPostgresql, SiJsonwebtokens, SiGithub, SiGit, SiPandas, SiNumpy, SiVercel } from 'react-icons/si';
-import { FaCss3 } from 'react-icons/fa';
-import { MdDevices, MdApi } from 'react-icons/md';
-import { BsGrid1X2 } from 'react-icons/bs';
-import { FaRobot, FaMagic } from 'react-icons/fa';
+import { Code2, Database, Layers, Shield, Rocket, Brain, BarChart2, BarChart3, Filter, LineChart } from 'lucide-react';
+import { SiHtml5, SiJavascript, SiReact, SiPython, SiSupabase, SiGithub, SiGit, SiPandas, SiNumpy, SiScikitlearn, SiTensorflow, SiOpencv, SiFirebase, SiMysql, SiStreamlit, SiFlask, SiDocker } from 'react-icons/si';
+import { FaCss3, FaDatabase, FaAws } from 'react-icons/fa';
 import { VscCode } from 'react-icons/vsc';
 
 /* ─────────────────────────────────────────
@@ -21,54 +18,49 @@ const SKILLS_DATA = [
 
 const SKILL_CATEGORIES = [
   {
-    name: 'WEB DEVELOPMENT',
+    name: 'PROGRAMMING & WEB',
     items: [
-      { icon: SiHtml5, label: 'HTML5' },
-      { icon: FaCss3, label: 'CSS3' },
-      { icon: SiJavascript, label: 'JavaScript' },
-      { icon: SiTypescript, label: 'TypeScript' },
-      { icon: SiReact, label: 'React' },
-      { icon: SiVite, label: 'Vite' },
-    ],
-  },
-  {
-    name: 'UI / UX DESIGN',
-    items: [
-      { icon: SiFigma, label: 'Figma' },
-      { icon: MdDevices, label: 'Responsive Design' },
-      { icon: BsGrid1X2, label: 'Component UI' },
-    ],
-  },
-  {
-    name: 'BACKEND & DATABASE',
-    items: [
-      { icon: SiNodedotjs, label: 'Node.js' },
       { icon: SiPython, label: 'Python' },
+      { icon: FaDatabase, label: 'SQL' },
+      { icon: SiHtml5, label: 'HTML' },
+      { icon: FaCss3, label: 'CSS' },
+      { icon: SiJavascript, label: 'JavaScript' },
+      { icon: SiReact, label: 'React' },
+    ],
+  },
+  {
+    name: 'AI & MACHINE LEARNING',
+    items: [
+      { icon: SiNumpy, label: 'NumPy' },
+      { icon: SiPandas, label: 'Pandas' },
+      { icon: SiScikitlearn, label: 'Scikit-learn' },
+      { icon: SiTensorflow, label: 'TensorFlow' },
+      { icon: BarChart2, label: 'Matplotlib' },
+      { icon: SiOpencv, label: 'OpenCV' },
+      { icon: Brain, label: 'Data Science' },
+    ],
+  },
+  {
+    name: 'DATA & DATABASES',
+    items: [
       { icon: SiSupabase, label: 'Supabase' },
-      { icon: SiPostgresql, label: 'PostgreSQL' },
+      { icon: SiFirebase, label: 'Firebase' },
+      { icon: SiMysql, label: 'MySQL' },
+      { icon: BarChart3, label: 'Power BI' },
+      { icon: Filter, label: 'Data Cleaning' },
+      { icon: LineChart, label: 'EDA' },
     ],
   },
   {
-    name: 'API & ARCHITECTURE',
+    name: 'TOOLS & DEPLOYMENT',
     items: [
-      { icon: MdApi, label: 'REST API' },
-      { icon: SiJsonwebtokens, label: 'Auth (JWT)' },
-      { icon: SiGithub, label: 'GitHub' },
       { icon: SiGit, label: 'Git' },
-    ],
-  },
-  {
-    name: 'AI-POWERED DEVELOPMENT',
-    items: [
-      { icon: FaRobot, label: 'AI Automation' },
-      { icon: FaMagic, label: 'Magic' },
-    ],
-  },
-  {
-    name: 'DEPLOYMENT & TOOLS',
-    items: [
-      { icon: SiVercel, label: 'Vercel' },
+      { icon: SiGithub, label: 'GitHub' },
       { icon: VscCode, label: 'VS Code' },
+      { icon: SiStreamlit, label: 'Streamlit' },
+      { icon: SiFlask, label: 'Flask' },
+      { icon: SiDocker, label: 'Docker' },
+      { icon: FaAws, label: 'AWS' },
     ],
   },
 ];
@@ -394,9 +386,12 @@ const SkillsMainframe = () => {
                 {category.items.map((item, i) => {
                   const Icon = item.icon;
                   return (
-                    <button key={i} className="icon-badge" title={item.label}>
-                      <Icon size={24} strokeWidth={1.5} />
-                    </button>
+                    <div key={i} className="sm-icon-wrapper">
+                      <button className="icon-badge" aria-label={item.label}>
+                        <Icon size={22} />
+                      </button>
+                      <span className="sm-icon-label">{item.label}</span>
+                    </div>
                   );
                 })}
               </div>
@@ -468,7 +463,7 @@ const CSS = `
   .sm-tag:hover { background:rgba(168,85,247,0.2); border-color:#22D3EE; color:#22D3EE; box-shadow:0 0 8px rgba(34,211,238,0.4); transform:translateY(-1px); }
 
   /* RIGHT Matrix panel */
-    .sm-categories {
+  .sm-categories {
     flex:0 0 42%;
     display:flex;
     flex-direction:column;
@@ -485,29 +480,37 @@ const CSS = `
   .sm-category {
     display:flex;
     flex-direction:column;
-    gap:6px;
+    gap:8px;
   }
   .sm-category-label {
     font-family:'Inter',sans-serif;
     font-size:0.78rem;
-    color:#fff;
+    color:#2dd4bf;
     text-transform:uppercase;
-    letter-spacing:1px;
+    letter-spacing:1.2px;
     margin:0;
+    font-weight:700;
   }
   .sm-icons {
     display:flex;
     flex-wrap:wrap;
-    gap:8px;
+    gap:14px 10px;
+  }
+  .sm-icon-wrapper {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+    width:80px;
   }
   .icon-badge {
-    width:36px;
-    height:36px;
+    width:42px;
+    height:42px;
     display:flex;
     align-items:center;
     justify-content:center;
     background:rgba(168,85,247,0.14);
-    border-radius:8px;
+    border-radius:10px;
     color:var(--color-surface-solid);
     transition:all 0.3s ease;
     border:1px solid rgba(168,85,247,0.28);
@@ -516,7 +519,20 @@ const CSS = `
     background:rgba(168,85,247,0.25);
     border-color:#22D3EE;
     color:var(--color-surface);
-    transform:scale(1.1);
+    transform:scale(1.08) translateY(-2px);
+  }
+  .sm-icon-label {
+    font-family:'Inter',sans-serif;
+    font-size:11px;
+    font-weight:500;
+    color:#cbd5e1;
+    text-align:center;
+    line-height:1.3;
+    white-space:normal;
+    word-break:keep-all;
+    overflow-wrap:normal;
+    width:80px;
+    max-width:80px;
   }
     flex:0 0 42%; background:rgba(4,8,18,0.7); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
     border:1px solid rgba(168,85,247,0.22); border-radius:16px;
