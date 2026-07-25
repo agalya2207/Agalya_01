@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Home as HomeIcon,
@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { motion, useMotionValue } from 'framer-motion';
 import HeroVisual from '../../components/HeroVisual.jsx';
+import ParticleNetwork3D from '../../components/ParticleNetwork3D.jsx';
 
 /* ─── NAV items (used by left sidebar) ─── */
 const NAV_ITEMS = [
@@ -56,110 +57,7 @@ const CountUp = ({ end, duration = 2.0 }) => {
 
 const Home = () => {
   const location = useLocation();
-  const canvasRef = useRef(null);
   const [hoveredNav, setHoveredNav] = useState(null);
-
-  /* ── Premium particle canvas: dots + network connections + data beams ── */
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animId;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', resize);
-    resize();
-
-    // 90 teal particles drifting slowly
-    const NUM_DOTS = 90;
-    const dots = Array.from({ length: NUM_DOTS }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: 1 + Math.random() * 1.8,
-      opacity: 0.08 + Math.random() * 0.14,
-      vx: (Math.random() - 0.5) * 0.12,
-      vy: (Math.random() - 0.5) * 0.12,
-    }));
-
-    // 3 faint diagonal data-flow beams
-    const NUM_BEAMS = 3;
-    const beams = Array.from({ length: NUM_BEAMS }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      len: 350 + Math.random() * 350,
-      angle: -28 + (Math.random() - 0.5) * 8,
-      opacity: 0.018 + Math.random() * 0.018,
-      speed: 0.035 + Math.random() * 0.035,
-    }));
-
-    // Connection threshold: draw lines between nearby dots
-    const CONNECTION_DIST = 130;
-
-    function animateLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw data-flow beams
-      beams.forEach(b => {
-        ctx.beginPath();
-        const rad = (b.angle * Math.PI) / 180;
-        const x2 = b.x + Math.cos(rad) * b.len;
-        const y2 = b.y + Math.sin(rad) * b.len;
-        ctx.strokeStyle = `rgba(45,212,191,${b.opacity})`;
-        ctx.lineWidth = 1;
-        ctx.moveTo(b.x, b.y);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-        b.x += b.speed;
-        b.y -= b.speed * 0.5;
-        if (b.x > canvas.width) b.x = -b.len;
-        if (b.y < -b.len) b.y = canvas.height;
-      });
-
-      // Draw neural network connections between close dots
-      for (let i = 0; i < dots.length; i++) {
-        for (let j = i + 1; j < dots.length; j++) {
-          const dx = dots[i].x - dots[j].x;
-          const dy = dots[i].y - dots[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < CONNECTION_DIST) {
-            const lineOpacity = (1 - dist / CONNECTION_DIST) * 0.07;
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            ctx.strokeStyle = `rgba(45,212,191,${lineOpacity})`;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Draw dots
-      dots.forEach(d => {
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(45,212,191,${d.opacity})`;
-        ctx.fill();
-        d.x += d.vx;
-        d.y += d.vy;
-        if (d.x < 0) d.x = canvas.width;
-        if (d.x > canvas.width) d.x = 0;
-        if (d.y < 0) d.y = canvas.height;
-        if (d.y > canvas.height) d.y = 0;
-      });
-
-      animId = requestAnimationFrame(animateLoop);
-    }
-
-    animateLoop();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animId);
-    };
-  }, []);
 
   const activeNav = NAV_ITEMS.find(n => n.path === location.pathname)?.id ?? 'home';
 
@@ -375,9 +273,9 @@ const Home = () => {
           flex: 1;
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 60px;
+          gap: 40px;
           align-items: stretch;
-          padding: 0 10% 0 160px;
+          padding: 0 5% 0 140px;
           height: 100vh;
           width: 100%;
         }
@@ -554,8 +452,8 @@ const Home = () => {
         }
       `}</style>
 
-      {/* Particle background */}
-      <canvas ref={canvasRef} className="hp-canvas" />
+      {/* 3D Particle Network Background */}
+      <ParticleNetwork3D />
 
       {/* Left Sidebar */}
       <nav className="hp-sidebar" aria-label="Main navigation">

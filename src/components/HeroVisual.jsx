@@ -45,9 +45,9 @@ const HeroVisual = () => {
         .hero-visual-container {
           position: relative;
           /* Explicit width prevents the absolute photo-wrap from collapsing to 0 */
-          width: 520px;
-          height: 90vh;
-          max-height: 720px;
+          width: clamp(360px, 40vw, 580px);
+          height: 82vh;
+          max-height: 780px;
           transform-style: preserve-3d;
           display: flex;
           align-items: flex-end;
@@ -78,7 +78,7 @@ const HeroVisual = () => {
           height: 100%;
           width: auto;
           max-width: 100%;
-          object-fit: contain;
+          object-fit: cover;
           object-position: center bottom;
           margin: 0;
           /* Cyan rim light — scales with photo */
@@ -118,7 +118,7 @@ const HeroVisual = () => {
 
         @media (max-width: 900px) {
           .hv-scene              { align-items: center; }
-          .hero-visual-container { width: 300px; height: 55vh; max-height: 420px; }
+          .hero-visual-container { width: clamp(300px, 80vw, 380px); height: 55vh; max-height: 460px; }
           .hv-icon-tile          { display: none; }
         }
       `}</style>
