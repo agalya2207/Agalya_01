@@ -126,22 +126,12 @@ const TABS_DATA = {
   ],
   internships: [
     {
-      category: "FULL STACK",
-      items: [
-        { name: "AI Dev Intern @ Tech Solutions", Icon: Brain }
-      ]
+      title: "Full Stack Development Intern – NoviTech R&D Pvt. Ltd.",
+      year: "2025"
     },
     {
-      category: "BACKEND & DATABASE",
-      items: [
-        { name: "Database Engineer Intern @ DataCorp", Icon: Database }
-      ]
-    },
-    {
-      category: "FRONTEND UI",
-      items: [
-        { name: "Frontend Intern @ Creative Agency", Icon: Code2 }
-      ]
+      title: "MERN Stack Development Intern – NoviTech R&D Pvt. Ltd.",
+      year: "2025-26"
     }
   ],
   experience: [
@@ -169,22 +159,25 @@ const TABS_DATA = {
     {
       category: "COMPUTING & MATH",
       items: [
-        { name: "Data Structures & Algorithms", Icon: Binary },
-        { name: "Machine Learning & Neural Networks", Icon: Network }
+        { name: "Data Structures & Algorithms", type: "Course", Icon: Binary },
+        { name: "Introduction to Generative AI Studio", type: "Workshop", Icon: Sparkles },
+        { name: "Agentic AI Workshop", type: "Workshop", Icon: Cpu },
+        { name: "Machine Learning & Neural Networks", type: "Course", Icon: Network }
       ]
     },
     {
       category: "ENGINEERING",
       items: [
-        { name: "Software Architecture & System Design", Icon: Layers },
-        { name: "Database Management Systems & SQL", Icon: Database }
+        { name: "Full Stack Development MasterClass", type: "Course", Icon: Code2 },
+        { name: "Software Architecture & System Design", type: "Course", Icon: Layers },
+        { name: "Database Management Systems & SQL", type: "Course", Icon: Database }
       ]
     },
     {
       category: "LANGUAGES",
       items: [
-        { name: "Advanced Python Programming", Icon: SiPython },
-        { name: "Modern JavaScript & TypeScript", Icon: SiJavascript }
+        { name: "Advanced Python Programming", type: "Course", Icon: SiPython },
+        { name: "Modern JavaScript & TypeScript", type: "Course", Icon: SiJavascript }
       ]
     }
   ]
@@ -272,7 +265,7 @@ const About = () => {
     { id: 'awards', label: 'Awards', Icon: Trophy },
     { id: 'internships', label: 'Internships', Icon: Laptop },
     { id: 'experience', label: 'Experience', Icon: Briefcase },
-    { id: 'courses', label: 'Courses', Icon: BookOpen }
+    { id: 'courses', label: 'Courses & Workshops', Icon: BookOpen }
   ];
 
   return (
@@ -346,24 +339,44 @@ const About = () => {
 
             {/* Tab Panels with content categorized */}
             <div className="tab-panel-content">
-              {TABS_DATA[activeTab].map((group, idx) => (
-                <div key={idx} className="category-group">
-                  <h3 className="category-group-title">{group.category}</h3>
-                  <div className="category-group-row">
-                    {group.items.map((item, itemIdx) => {
-                      const Icon = item.Icon;
-                      return (
-                        <div key={itemIdx} className="tech-icon-wrapper">
-                          <button className="tech-icon-btn" aria-label={item.name}>
-                            <Icon size={24} />
-                          </button>
-                          <span className="tech-icon-label">{item.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
+              {activeTab === 'internships' ? (
+                <div className="timeline-container">
+                  <div className="timeline-line" />
+                  {TABS_DATA.internships.map((item, idx) => (
+                    <div key={idx} className="timeline-item">
+                      <div className="timeline-dot-wrapper">
+                        <div className="timeline-dot" />
+                      </div>
+                      <div className="timeline-card">
+                        <span className="timeline-title">{item.title}</span>
+                        <span className="timeline-badge">{item.year}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                TABS_DATA[activeTab].map((group, idx) => (
+                  <div key={idx} className="category-group">
+                    <h3 className="category-group-title">{group.category}</h3>
+                    <div className="category-group-row">
+                      {group.items.map((item, itemIdx) => {
+                        const Icon = item.Icon;
+                        return (
+                          <div key={itemIdx} className="tech-icon-wrapper">
+                            <button className="tech-icon-btn" aria-label={item.name}>
+                              <Icon size={24} />
+                            </button>
+                            <span className="tech-icon-label">{item.name}</span>
+                            {item.type && (
+                              <span className="item-type-badge">{item.type}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
             {/* Bottom Status Row */}
@@ -676,6 +689,123 @@ const CSS_STYLES = `
     overflow-wrap: normal;
     width: 80px;
     max-width: 80px;
+  }
+
+  .item-type-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(45, 217, 196, 0.12);
+    border: 1px solid rgba(45, 217, 196, 0.25);
+    border-radius: 9999px;
+    padding: 2px 7px;
+    line-height: 1;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* Vertical Timeline Layout for Internships */
+  .timeline-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px 4px 8px 24px;
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: 8px;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--accent) 0%,
+      rgba(45, 217, 196, 0.25) 100%
+    );
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .timeline-dot-wrapper {
+    position: absolute;
+    left: -16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #0f0a20;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+    transition: var(--transition-smooth);
+  }
+
+  .timeline-item:hover .timeline-dot {
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    transform: scale(1.25);
+  }
+
+  .timeline-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: var(--transition-spring);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .timeline-card:hover {
+    transform: translateX(4px);
+    background: rgba(45, 217, 196, 0.05);
+    border-color: rgba(45, 217, 196, 0.3);
+    box-shadow: 0 6px 20px rgba(45, 217, 196, 0.1);
+  }
+
+  .timeline-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+  }
+
+  .timeline-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(45, 217, 196, 0.1);
+    border: 1px solid rgba(45, 217, 196, 0.25);
+    border-radius: 9999px;
+    padding: 4px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   /* Ensure all SVGs inherit parent color fill and stroke values dynamically */
