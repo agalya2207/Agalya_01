@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Code2,
-  Trophy,
   Laptop,
   Briefcase,
   BookOpen,
@@ -11,9 +10,6 @@ import {
   Webhook,
   Shield,
   Sparkles,
-  Award,
-  Medal,
-  Heart,
   Brain,
   Database,
   Cpu,
@@ -102,28 +98,7 @@ const TABS_DATA = {
       ]
     }
   ],
-  awards: [
-    {
-      category: "HACKATHONS",
-      items: [
-        { name: "1st Place - Smart India Hackathon", Icon: Trophy },
-        { name: "Best AI Innovation Award", Icon: Sparkles }
-      ]
-    },
-    {
-      category: "ACADEMICS",
-      items: [
-        { name: "Academic Excellence Award", Icon: Award },
-        { name: "Best Data Science Presentation", Icon: Medal }
-      ]
-    },
-    {
-      category: "COMMUNITY",
-      items: [
-        { name: "Top Open Source Contributor", Icon: Heart }
-      ]
-    }
-  ],
+
   internships: [
     {
       title: "Full Stack Development Intern – NoviTech R&D Pvt. Ltd.",
@@ -136,23 +111,21 @@ const TABS_DATA = {
   ],
   experience: [
     {
-      category: "DEVELOPMENT",
-      items: [
-        { name: "Freelance Full Stack Developer (2+ Yrs)", Icon: Briefcase },
-        { name: "Open Source Contributor", Icon: SiReact }
-      ]
+      title: "Full Stack Developer",
+      year: "2026 – Present",
+      isLive: true
     },
     {
-      category: "AI & DATA WORKFLOWS",
-      items: [
-        { name: "AI Pipeline & Automation Engineer", Icon: Cpu }
-      ]
+      title: "Web Developer",
+      year: "2025"
     },
     {
-      category: "COLLABORATION",
-      items: [
-        { name: "Led 3-member team for Smart Civic", Icon: Users }
-      ]
+      title: "Python Developer",
+      year: "2025"
+    },
+    {
+      title: "Frontend Developer",
+      year: "2024"
     }
   ],
   courses: [
@@ -161,23 +134,20 @@ const TABS_DATA = {
       items: [
         { name: "Data Structures & Algorithms", type: "Course", Icon: Binary },
         { name: "Introduction to Generative AI Studio", type: "Workshop", Icon: Sparkles },
-        { name: "Agentic AI Workshop", type: "Workshop", Icon: Cpu },
-        { name: "Machine Learning & Neural Networks", type: "Course", Icon: Network }
+        { name: "Agentic AI Workshop", type: "Workshop", Icon: Cpu }
       ]
     },
     {
       category: "ENGINEERING",
       items: [
         { name: "Full Stack Development MasterClass", type: "Course", Icon: Code2 },
-        { name: "Software Architecture & System Design", type: "Course", Icon: Layers },
         { name: "Database Management Systems & SQL", type: "Course", Icon: Database }
       ]
     },
     {
       category: "LANGUAGES",
       items: [
-        { name: "Advanced Python Programming", type: "Course", Icon: SiPython },
-        { name: "Modern JavaScript & TypeScript", type: "Course", Icon: SiJavascript }
+        { name: "Advanced Python Programming", type: "Course", Icon: SiPython }
       ]
     }
   ]
@@ -262,7 +232,6 @@ const About = () => {
 
   const tabsConfig = [
     { id: 'skills', label: 'Skills', Icon: Code2 },
-    { id: 'awards', label: 'Awards', Icon: Trophy },
     { id: 'internships', label: 'Internships', Icon: Laptop },
     { id: 'experience', label: 'Experience', Icon: Briefcase },
     { id: 'courses', label: 'Courses & Workshops', Icon: BookOpen }
@@ -339,17 +308,25 @@ const About = () => {
 
             {/* Tab Panels with content categorized */}
             <div className="tab-panel-content">
-              {activeTab === 'internships' ? (
+              {activeTab === 'internships' || activeTab === 'experience' ? (
                 <div className="timeline-container">
                   <div className="timeline-line" />
-                  {TABS_DATA.internships.map((item, idx) => (
-                    <div key={idx} className="timeline-item">
+                  {TABS_DATA[activeTab].map((item, idx) => (
+                    <div key={idx} className={`timeline-item ${item.isLive ? 'is-live-item' : ''}`}>
                       <div className="timeline-dot-wrapper">
-                        <div className="timeline-dot" />
+                        <div className={`timeline-dot ${item.isLive ? 'is-live-dot' : ''}`} />
                       </div>
-                      <div className="timeline-card">
+                      <div className={`timeline-card ${item.isLive ? 'is-live-card' : ''}`}>
                         <span className="timeline-title">{item.title}</span>
-                        <span className="timeline-badge">{item.year}</span>
+                        <div className="timeline-badge-group">
+                          <span className="timeline-badge">{item.year}</span>
+                          {item.isLive && (
+                            <span className="live-pill">
+                              <span className="live-dot" />
+                              LIVE
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -758,6 +735,13 @@ const CSS_STYLES = `
     transition: var(--transition-smooth);
   }
 
+  .timeline-dot.is-live-dot {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent), 0 0 15px var(--accent-glow);
+    border-color: #ffffff;
+    transform: scale(1.15);
+  }
+
   .timeline-item:hover .timeline-dot {
     background: var(--accent);
     box-shadow: 0 0 12px var(--accent);
@@ -785,6 +769,44 @@ const CSS_STYLES = `
     background: rgba(45, 217, 196, 0.05);
     border-color: rgba(45, 217, 196, 0.3);
     box-shadow: 0 6px 20px rgba(45, 217, 196, 0.1);
+  }
+
+  .timeline-card.is-live-card {
+    background: rgba(45, 217, 196, 0.06);
+    border-color: rgba(45, 217, 196, 0.35);
+    box-shadow: 0 4px 20px rgba(45, 217, 196, 0.12);
+  }
+
+  .timeline-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 0 rgba(34, 197, 94, 0.4);
+    animation: pulse-glow-dot 2s infinite;
   }
 
   .timeline-title {
