@@ -59,7 +59,7 @@ const FloatingNav = () => {
       window.history.pushState(null, '', item.hash);
     } else {
       // If the section doesn't exist on this page, navigate to the route
-      navigate(item.path + item.hash);
+      navigate(item.path);
     }
   };
 

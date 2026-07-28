@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import useScrollNavigation from '../../hooks/useScrollNavigation';
 import { motion } from 'framer-motion';
 import {
   Code2,
@@ -176,12 +177,14 @@ const CountUp = ({ end, duration = 2.0 }) => {
     window.requestAnimationFrame(step);
   }, [end, duration]);
 
+  const isPercent = end.includes('%');
   const isPlus = end.includes('+');
 
   return (
     <span>
       {count}
       {isPlus && '+'}
+      {isPercent && '%'}
     </span>
   );
 };
@@ -190,6 +193,7 @@ const CountUp = ({ end, duration = 2.0 }) => {
    MAIN ABOUT COMPONENT
    ───────────────────────────────────────── */
 const About = () => {
+  useScrollNavigation();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('skills');
 
@@ -263,8 +267,8 @@ const About = () => {
           {/* Stats Grid */}
           <div className="about-stats-grid">
             <div className="stat-card">
-              <div className="stat-number"><CountUp end="2+" /></div>
-              <div className="stat-label">Years Experience</div>
+              <div className="stat-number"><CountUp end="100%" /></div>
+              <div className="stat-label">Dedication</div>
             </div>
             <div className="stat-card">
               <div className="stat-number"><CountUp end="5+" /></div>

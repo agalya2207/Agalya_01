@@ -1,7 +1,8 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import useScrollNavigation from '../../hooks/useScrollNavigation';
 import { motion } from 'framer-motion';
 import { FiGithub, FiExternalLink, FiStar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import './Projects.css';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 // ═══════════════════════════════════════════════════
 // ASSETS
@@ -170,6 +171,9 @@ const ProjectCard = ({ project }: ProjectCardProps) => (
 // ═══════════════════════════════════════════════════
 
 const Projects = () => {
+  useScrollNavigation();
+  // existing component code continues
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);

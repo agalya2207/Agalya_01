@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import useScrollNavigation from '../../hooks/useScrollNavigation';
 import {
   Home as HomeIcon,
   User,
@@ -56,6 +57,7 @@ const CountUp = ({ end, duration = 2.0 }) => {
 };
 
 const Home = () => {
+  useScrollNavigation();
   const location = useLocation();
   const [hoveredNav, setHoveredNav] = useState(null);
 
@@ -477,21 +479,21 @@ const Home = () => {
 
       {/* Top-Right Social Bar */}
       <div className="hp-socials-bar" role="complementary" aria-label="Social links">
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="Instagram">
+        <a href="https://www.instagram.com/_agalyaaa_?utm_source=qr&igsh=MXU2djV5aTJrbHlxMg==" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="Instagram">
           <Instagram size={17} strokeWidth={1.6} />
         </a>
-        <Link to="/contact" className="hp-soc-btn" aria-label="Email">
+        <a href="mailto:agalya.2207@gmail.com" className="hp-soc-btn" aria-label="Email">
           <Mail size={17} strokeWidth={1.6} />
-        </Link>
+        </a>
         <a href="https://www.linkedin.com/in/agalya-g-96106337b" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="LinkedIn">
           <Linkedin size={17} strokeWidth={1.6} />
         </a>
         <Link to="/contact" className="hp-soc-btn" aria-label="Messages">
           <MessageSquare size={17} strokeWidth={1.6} />
         </Link>
-        <button className="hp-soc-btn" aria-label="Report" style={{ cursor: 'default' }}>
+        <a href="https://www.google.com/maps/search/?api=1&query=St.+Joseph%27s+College+of+Engineering,+Sriperumbudur,+near+toll+plaza" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="Location">
           <Flag size={17} strokeWidth={1.6} />
-        </button>
+        </a>
         <a href="/resume.pdf" download className="hp-cv-btn" aria-label="Download CV">
           <FileText size={16} strokeWidth={1.8} />
           CV
