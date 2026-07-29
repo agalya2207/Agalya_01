@@ -1,6 +1,9 @@
+import React, { lazy, Suspense } from 'react';
 import { useMotionValue, useSpring, useTransform, motion } from 'framer-motion';
 import { BarChart2, MousePointer, Droplets, Bell, Activity, Zap } from 'lucide-react';
-import profilePhoto from '../assets/image.png';
+import profilePhoto from '../assets/image.webp';
+
+const ParticleNetwork3D = lazy(() => import('./ParticleNetwork3D'));
 
 
 const HeroVisual = () => {
@@ -28,6 +31,9 @@ const HeroVisual = () => {
 
   return (
     <>
+      <Suspense fallback={null}>
+        <ParticleNetwork3D />
+      </Suspense>
       <style>{`
         /* ─── Scene wrapper: anchors to bottom so photo grows upward ─── */
         .hv-scene {
@@ -134,6 +140,7 @@ const HeroVisual = () => {
               src={profilePhoto}
               className="hud-photo"
               alt="Agalya G"
+              fetchPriority="high"
             />
           </div>
 

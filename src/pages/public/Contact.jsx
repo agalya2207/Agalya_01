@@ -194,7 +194,7 @@ const Contact = () => {
         }
 
         .ct-input::placeholder, .ct-textarea::placeholder {
-          color: rgba(255,255,255,0.25);
+          color: rgba(255, 255, 255, 0.50);
         }
 
         .ct-input:focus, .ct-textarea:focus {

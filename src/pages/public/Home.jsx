@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import useScrollNavigation from '../../hooks/useScrollNavigation';
 import {
@@ -13,8 +13,9 @@ import {
   Flag,
 } from 'lucide-react';
 import { motion, useMotionValue } from 'framer-motion';
-import HeroVisual from '../../components/HeroVisual.jsx';
-import ParticleNetwork3D from '../../components/ParticleNetwork3D.jsx';
+
+// Lazy load heavy visual components
+const HeroVisual = lazy(() => import('../../components/HeroVisual.jsx'));
 
 /* ─── NAV items (used by left sidebar) ─── */
 const NAV_ITEMS = [
@@ -274,10 +275,10 @@ const Home = () => {
           z-index: 10;
           flex: 1;
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 40px;
+          grid-template-columns: minmax(auto, 1.25fr) minmax(auto, 1fr);
+          gap: 28px;
           align-items: stretch;
-          padding: 0 5% 0 140px;
+          padding: 0 4% 0 110px;
           height: 100vh;
           width: 100%;
         }
@@ -318,11 +319,12 @@ const Home = () => {
 
         .hp-name {
           font-family: 'Poppins', 'Inter', sans-serif;
-          font-size: clamp(48px, 6vw, 80px);
+          font-size: clamp(38px, 4.8vw, 76px);
           font-weight: 800;
           line-height: 1.0;
           letter-spacing: -0.03em;
           color: #ffffff;
+          white-space: nowrap;
           margin: 0;
         }
         .hp-name .teal { color: var(--teal-accent); }
@@ -454,9 +456,6 @@ const Home = () => {
         }
       `}</style>
 
-      {/* 3D Particle Network Background */}
-      <ParticleNetwork3D />
-
       {/* Left Sidebar */}
       <nav className="hp-sidebar" aria-label="Main navigation">
         {NAV_ITEMS.map(item => (
@@ -555,9 +554,11 @@ const Home = () => {
     
         </motion.section>
 
-        {/* Right side Visual container */}
+        {/* Right side Visual container (lazy-loaded, Fix 1) */}
         <div className="hp-right-wrap">
-          <HeroVisual />
+          <Suspense fallback={null}>
+            <HeroVisual />
+          </Suspense>
         </div>
       </main>
     </div>
