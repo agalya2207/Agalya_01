@@ -493,7 +493,7 @@ const Home = () => {
         <a href="https://www.google.com/maps/search/?api=1&query=St.+Joseph%27s+College+of+Engineering,+Sriperumbudur,+near+toll+plaza" target="_blank" rel="noopener noreferrer" className="hp-soc-btn" aria-label="Location">
           <Flag size={17} strokeWidth={1.6} />
         </a>
-        <a href="/resume.pdf" download className="hp-cv-btn" aria-label="Download CV">
+        <a href="/Agalya_resume.pdf" download className="hp-cv-btn" aria-label="Download CV">
           <FileText size={16} strokeWidth={1.8} />
           CV
         </a>

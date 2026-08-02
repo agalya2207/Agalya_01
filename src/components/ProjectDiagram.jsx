@@ -18,7 +18,7 @@ const AIMatchDiagram = () => (
     <g transform="translate(80, 80)">
       <rect width="140" height="40" rx="6" fill="#0f172a" stroke="#1e293b" strokeWidth="2" />
       <text x="70" y="16" textAnchor="middle" fill="#64748b" fontSize="9" letterSpacing="0.05em">RESUME</text>
-      <text x="70" y="30" textAnchor="middle" fill="#cbd5e1" fontSize="10">resume_agalya.pdf</text>
+      <text x="70" y="30" textAnchor="middle" fill="#cbd5e1" fontSize="10">Agalya_resume.pdf</text>
     </g>
     <g transform="translate(80, 200)">
       <rect width="140" height="40" rx="6" fill="#0f172a" stroke="#1e293b" strokeWidth="2" />

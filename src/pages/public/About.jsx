@@ -281,6 +281,7 @@ const About = () => {
           </div>
 
           <div className="about-section-label">ABOUT ME</div>
+
         </motion.div>
 
         {/* RIGHT COLUMN: SKILLS PANEL */}
